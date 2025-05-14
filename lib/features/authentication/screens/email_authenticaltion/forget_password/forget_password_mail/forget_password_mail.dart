@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../../common_widgets/form/form_header_widget.dart';
 import '../../../../../../utils/constants/colors.dart';
 import '../../../../../../utils/constants/image_strings.dart';
 import '../../../../../../utils/constants/sizes.dart';
 import '../../../../../../utils/constants/text_strings.dart';
-import '../../../../../common_widgets/form/form_header_widget.dart';
 
 class ForgetPasswordMailScreen extends StatelessWidget {
   const ForgetPasswordMailScreen({super.key});
