@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../../constants/image_strings.dart';
-import '../../../../constants/sizes.dart';
-import '../../../../constants/text_strings.dart';
+import '../../../../../utils/constants/image_strings.dart';
+import '../../../../../utils/constants/sizes.dart';
+import '../../../../../utils/constants/text_strings.dart';
 import 'widgets/appbar.dart';
 import 'widgets/banners.dart';
 import 'widgets/categories.dart';
@@ -21,6 +21,7 @@ class Dashboard extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: DashboardAppBar(isDark: isDark),
+
         /// Create a new Header
         drawer: Drawer(
           child: ListView(
@@ -63,7 +64,7 @@ class Dashboard extends StatelessWidget {
 
                 //Top Course
                 Text(tDashboardTopCourses, style: txtTheme.headlineMedium?.apply(fontSizeFactor: 1.2)),
-                DashboardTopCourses(txtTheme: txtTheme, isDark: isDark)
+                DashboardTopCourses(txtTheme: txtTheme, isDark: isDark),
               ],
             ),
           ),

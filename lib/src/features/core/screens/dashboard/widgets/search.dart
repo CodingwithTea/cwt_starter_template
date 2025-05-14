@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../../../../constants/text_strings.dart';
+
+import '../../../../../../utils/constants/text_strings.dart';
 
 class DashboardSearchBox extends StatelessWidget {
-  const DashboardSearchBox({
-    super.key,
-    required this.txtTheme,
-  });
+  const DashboardSearchBox({super.key, required this.txtTheme});
 
   final TextTheme txtTheme;
 
@@ -16,10 +14,7 @@ class DashboardSearchBox extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(tDashboardSearch, style: txtTheme.displayMedium?.apply(color: Colors.grey.withValues(alpha: 0.5))),
-          const Icon(Icons.mic, size: 25),
-        ],
+        children: [Text(tDashboardSearch, style: txtTheme.displayMedium?.apply(color: Colors.grey.withValues(alpha: 0.5))), const Icon(Icons.mic, size: 25)],
       ),
     );
   }

@@ -1,10 +1,10 @@
 import 'package:get/get.dart';
 
-import '../../../constants/text_strings.dart';
-import '../../../repository/authentication_repository/authentication_repository.dart';
-import '../../../repository/user_repository/user_repository.dart';
-import '../../../utils/helper/helper_controller.dart';
-import '../../authentication/models/user_model.dart';
+import '../../../../data/repository/authentication_repository/authentication_repository.dart';
+import '../../../../data/repository/user_repository/user_repository.dart';
+import '../../../../features/authentication/models/user_model.dart';
+import '../../../../utils/constants/text_strings.dart';
+import '../../../../utils/helper/helper_controller.dart';
 
 class ProfileController extends GetxController {
   static ProfileController get instance => Get.find();

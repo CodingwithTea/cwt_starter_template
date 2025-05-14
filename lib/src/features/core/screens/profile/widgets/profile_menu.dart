@@ -1,18 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
-import '../../../../../constants/colors.dart';
-import '../../../../../constants/sizes.dart';
+import '../../../../../../utils/constants/colors.dart';
+import '../../../../../../utils/constants/sizes.dart';
 
 class ProfileMenuWidget extends StatelessWidget {
-  const ProfileMenuWidget({
-    super.key,
-    required this.title,
-    required this.icon,
-    required this.onPress,
-    this.endIcon = true,
-    this.textColor,
-  });
+  const ProfileMenuWidget({super.key, required this.title, required this.icon, required this.onPress, this.endIcon = true, this.textColor});
 
   final String title;
   final IconData icon;
@@ -30,17 +23,11 @@ class ProfileMenuWidget extends StatelessWidget {
       leading: Container(
         width: 40,
         height: 40,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(tBorderRadius),
-          color: iconColor.withValues(alpha: 0.1),
-        ),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(tBorderRadius), color: iconColor.withValues(alpha: 0.1)),
         child: Icon(icon, color: iconColor),
       ),
       title: Text(title, style: Theme.of(context).textTheme.bodyLarge?.apply(color: textColor)),
-      trailing: endIcon
-          ? const SizedBox(
-              width: 30, height: 30, child: Icon(LineAwesomeIcons.angle_left_solid, size: 18.0, color: Colors.grey))
-          : null,
+      trailing: endIcon ? const SizedBox(width: 30, height: 30, child: Icon(LineAwesomeIcons.angle_left_solid, size: 18.0, color: Colors.grey)) : null,
     );
   }
 }

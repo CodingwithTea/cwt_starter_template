@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../constants/image_strings.dart';
+import '../../../../../utils/constants/image_strings.dart';
 
 class DashboardTopCoursesModel{
   final String title;

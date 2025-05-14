@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-import '../../../../constants/sizes.dart';
-import '../../../../constants/text_strings.dart';
-import '../../../authentication/models/user_model.dart';
+
+import '../../../../../features/authentication/models/user_model.dart';
+import '../../../../../utils/constants/sizes.dart';
+import '../../../../../utils/constants/text_strings.dart';
 import '../../controllers/profile_controller.dart';
 import 'profile_form.dart';
 import 'widgets/image_with_icon.dart';
@@ -64,4 +65,3 @@ class UpdateProfileScreen extends StatelessWidget {
     );
   }
 }
-
