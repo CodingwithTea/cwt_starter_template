@@ -41,7 +41,7 @@ class OnBoardingController extends GetxController {
         title: tOnBoardingTitle1,
         subTitle: tOnBoardingSubTitle1,
         counterText: tOnBoardingCounter1,
-        bgColor: tOnBoardingPage1Color,
+        bgColor: TColors.onBoardingPage1Color,
       ),
     ),
     OnBoardingPageWidget(
@@ -50,7 +50,7 @@ class OnBoardingController extends GetxController {
         title: tOnBoardingTitle2,
         subTitle: tOnBoardingSubTitle2,
         counterText: tOnBoardingCounter2,
-        bgColor: tOnBoardingPage2Color,
+        bgColor: TColors.onBoardingPage2Color,
       ),
     ),
     OnBoardingPageWidget(
@@ -59,7 +59,7 @@ class OnBoardingController extends GetxController {
         title: tOnBoardingTitle3,
         subTitle: tOnBoardingSubTitle3,
         counterText: tOnBoardingCounter3,
-        bgColor: tOnBoardingPage3Color,
+        bgColor: TColors.onBoardingPage3Color,
       ),
     ),
   ];

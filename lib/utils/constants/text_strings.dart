@@ -137,3 +137,6 @@ const String tMenu3 = "User Management";
 const String tDelete = "Delete";
 const String tJoined = "Joined";
 const String tJoinedAt = " 31 October 2022";
+
+// -- Validation
+const String dateOfBirthError = "You must be at least 18 years old.";

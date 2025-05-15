@@ -16,14 +16,14 @@ class ProfileMenuWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
-    var iconColor = isDark ? tPrimaryColor : tAccentColor;
+    var iconColor = isDark ? TColors.primary : TColors.accent;
 
     return ListTile(
       onTap: onPress,
       leading: Container(
         width: 40,
         height: 40,
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(tBorderRadius), color: iconColor.withValues(alpha: 0.1)),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(TSizes.borderRadiusLg), color: iconColor.withValues(alpha: 0.1)),
         child: Icon(icon, color: iconColor),
       ),
       title: Text(title, style: Theme.of(context).textTheme.bodyLarge?.apply(color: textColor)),

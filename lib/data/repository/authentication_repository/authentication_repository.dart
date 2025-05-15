@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import '../../../features/authentication/screens/mail_verification/mail_verification.dart';
+import '../../../features/authentication/screens/email_authentication/mail_verification/mail_verification.dart';
 import '../../../features/authentication/screens/on_boarding/on_boarding_screen.dart';
 import '../../../features/authentication/screens/welcome/welcome_screen.dart';
 import '../../../src/features/core/screens/dashboard/dashboard.dart';

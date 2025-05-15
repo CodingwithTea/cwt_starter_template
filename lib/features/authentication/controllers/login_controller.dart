@@ -1,8 +1,8 @@
+import 'package:cwt_starter_template/utils/popups/exports.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../utils/constants/text_strings.dart';
-import '../../../../utils/helper/helper_controller.dart';
 import '../../../data/repository/authentication_repository/authentication_repository.dart';
 import '../../../data/repository/user_repository/user_repository.dart';
 import '../models/user_model.dart';
@@ -34,7 +34,7 @@ class LoginController extends GetxController {
       auth.setInitialScreen(auth.firebaseUser);
     } catch (e) {
       isLoading.value = false;
-      Helper.errorSnackBar(title: tOhSnap, message: e.toString());
+      TLoaders.errorSnackBar(title: tOhSnap, message: e.toString());
     }
   }
 
@@ -58,7 +58,7 @@ class LoginController extends GetxController {
       auth.setInitialScreen(auth.firebaseUser);
     } catch (e) {
       isGoogleLoading.value = false;
-      Helper.errorSnackBar(title: tOhSnap, message: e.toString());
+      TLoaders.errorSnackBar(title: tOhSnap, message: e.toString());
     }
   }
 
@@ -77,7 +77,7 @@ class LoginController extends GetxController {
       isFacebookLoading.value = false;
     } catch (e) {
       isFacebookLoading.value = false;
-      Helper.errorSnackBar(title: tOhSnap, message: e.toString());
+      TLoaders.errorSnackBar(title: tOhSnap, message: e.toString());
     }
   }
 }

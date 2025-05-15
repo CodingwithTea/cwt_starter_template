@@ -1,10 +1,10 @@
+import 'package:cwt_starter_template/utils/popups/exports.dart';
 import 'package:get/get.dart';
 
 import '../../../../data/repository/authentication_repository/authentication_repository.dart';
 import '../../../../data/repository/user_repository/user_repository.dart';
 import '../../../../features/authentication/models/user_model.dart';
 import '../../../../utils/constants/text_strings.dart';
-import '../../../../utils/helper/helper_controller.dart';
 
 class ProfileController extends GetxController {
   static ProfileController get instance => Get.find();
@@ -20,11 +20,11 @@ class ProfileController extends GetxController {
       if (currentUserEmail.isNotEmpty) {
         return await _userRepo.getUserDetails(currentUserEmail);
       } else {
-        Helper.warningSnackBar(title: 'Error', message: 'No user found!');
+        TLoaders.warningSnackBar(title: 'Error', message: 'No user found!');
         return;
       }
     } catch (e) {
-      Helper.errorSnackBar(title: 'Error', message: e.toString());
+      TLoaders.errorSnackBar(title: 'Error', message: e.toString());
     }
   }
 
@@ -36,9 +36,9 @@ class ProfileController extends GetxController {
     try {
       await _userRepo.updateUserRecord(user);
       //Show some message or redirect to other screen here...
-      Helper.successSnackBar(title: tCongratulations, message: 'Profile Record has been updated!');
+      TLoaders.successSnackBar(title: tCongratulations, message: 'Profile Record has been updated!');
     } catch (e) {
-      Helper.errorSnackBar(title: 'Error', message: e.toString());
+      TLoaders.errorSnackBar(title: 'Error', message: e.toString());
     }
   }
 
@@ -48,12 +48,12 @@ class ProfileController extends GetxController {
       if (uID.isNotEmpty) {
         await _userRepo.deleteUser(uID);
         // You can Logout() or move to other screen here...
-        Helper.successSnackBar(title: tCongratulations, message: 'Account has been deleted!');
+        TLoaders.successSnackBar(title: tCongratulations, message: 'Account has been deleted!');
       } else {
-        Helper.successSnackBar(title: 'Error', message: 'User cannot be deleted!');
+        TLoaders.errorSnackBar(title: 'Error', message: 'User cannot be deleted!');
       }
     } catch (e) {
-      Helper.errorSnackBar(title: 'Error', message: e.toString());
+      TLoaders.errorSnackBar(title: 'Error', message: e.toString());
     }
   }
 }

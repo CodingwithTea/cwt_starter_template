@@ -12,11 +12,11 @@ class TElevatedButtonTheme {
   static final lightElevatedButtonTheme  = ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
       elevation: 0,
-      foregroundColor: tWhiteColor,
-      backgroundColor: tDarkColor,
-      side: const BorderSide(color: tDarkColor),
-      padding: const EdgeInsets.symmetric(vertical: tButtonHeight),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(tBorderRadius)),
+      foregroundColor: TColors.white,
+      backgroundColor: TColors.white,
+      side: const BorderSide(color: TColors.white),
+      padding: const EdgeInsets.symmetric(vertical: TSizes.buttonHeight),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(TSizes.borderRadiusLg)),
     ),
   );
 
@@ -24,11 +24,11 @@ class TElevatedButtonTheme {
   static final darkElevatedButtonTheme = ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
       elevation: 0,
-      foregroundColor: tDarkColor,
-      backgroundColor: tPrimaryColor,
-      side: const BorderSide(color: tPrimaryColor),
-      padding: const EdgeInsets.symmetric(vertical: tButtonHeight),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(tBorderRadius)),
+      foregroundColor: TColors.white,
+      backgroundColor: TColors.primary,
+      side: const BorderSide(color: TColors.primary),
+      padding: const EdgeInsets.symmetric(vertical: TSizes.buttonHeight),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(TSizes.borderRadiusLg)),
     ),
   );
 }

@@ -16,13 +16,13 @@ class AllUsers extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: tPrimaryColor,
+        backgroundColor: TColors.primary,
         leading: IconButton(onPressed: () => Get.back(), icon: const Icon(LineAwesomeIcons.angle_left_solid)),
         title: Text("Users", style: Theme.of(context).textTheme.headlineMedium),
       ),
       body: SingleChildScrollView(
         child: Container(
-          padding: const EdgeInsets.all(tDefaultSpace),
+          padding: const EdgeInsets.all(TSizes.defaultSpace),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -44,14 +44,14 @@ class AllUsers extends StatelessWidget {
                               Container(
                                 padding: const EdgeInsets.all(10.0),
                                 decoration: BoxDecoration(
-                                  color: tPrimaryColor.withValues(alpha: 0.1),
+                                  color: TColors.primary.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(10.0),
                                   border: const Border(bottom: BorderSide(), top: BorderSide(), left: BorderSide(), right: BorderSide()),
                                 ),
                                 child: ListTile(
                                   leading: Container(
                                     padding: const EdgeInsets.all(10.0),
-                                    decoration: const BoxDecoration(shape: BoxShape.circle, color: tPrimaryColor),
+                                    decoration: const BoxDecoration(shape: BoxShape.circle, color: TColors.primary),
                                     child: const Icon(LineAwesomeIcons.user, color: Colors.black),
                                   ),
                                   title: Text(snapshot.data![index].fullName, style: Theme.of(context).textTheme.headlineMedium),

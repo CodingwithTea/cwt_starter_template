@@ -23,7 +23,7 @@ class UpdateProfileScreen extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Container(
-          padding: const EdgeInsets.all(tDefaultSpace),
+          padding: const EdgeInsets.all(TSizes.defaultSpace),
 
           /// -- Future Builder to load cloud data
           child: FutureBuilder(

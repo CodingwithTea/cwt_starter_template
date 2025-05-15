@@ -41,26 +41,26 @@ class Dashboard extends StatelessWidget {
         ),
         body: SingleChildScrollView(
           child: Container(
-            padding: const EdgeInsets.all(tDashboardPadding),
+            padding: const EdgeInsets.all(TSizes.lg),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 //Heading
                 Text(tDashboardTitle, style: txtTheme.bodyMedium),
                 Text(tDashboardHeading, style: txtTheme.displayMedium),
-                const SizedBox(height: tDashboardPadding),
+                const SizedBox(height: TSizes.lg),
 
                 //Search Box
                 DashboardSearchBox(txtTheme: txtTheme),
-                const SizedBox(height: tDashboardPadding),
+                const SizedBox(height: TSizes.lg),
 
                 //Categories
                 DashboardCategories(txtTheme: txtTheme),
-                const SizedBox(height: tDashboardPadding),
+                const SizedBox(height: TSizes.lg),
 
                 //Banners
                 DashboardBanners(txtTheme: txtTheme, isDark: isDark),
-                const SizedBox(height: tDashboardPadding),
+                const SizedBox(height: TSizes.lg),
 
                 //Top Course
                 Text(tDashboardTopCourses, style: txtTheme.headlineMedium?.apply(fontSizeFactor: 1.2)),

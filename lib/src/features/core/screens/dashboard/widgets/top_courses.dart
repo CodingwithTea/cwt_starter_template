@@ -31,7 +31,7 @@ class DashboardTopCourses extends StatelessWidget {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       //For Dark Color
-                      color: isDark ? tSecondaryColor : tCardBgColor,
+                      color: isDark ? TColors.secondary : TColors.cardBackgroundColor,
                     ),
                     padding: const EdgeInsets.all(10),
                     child: Column(
@@ -47,7 +47,7 @@ class DashboardTopCourses extends StatelessWidget {
                         Row(
                           children: [
                             ElevatedButton(style: ElevatedButton.styleFrom(shape: const CircleBorder()), onPressed: () {}, child: const Icon(Icons.play_arrow)),
-                            const SizedBox(width: tDashboardCardPadding),
+                            const SizedBox(width: TSizes.sm),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [

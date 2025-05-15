@@ -12,7 +12,7 @@ class OnBoardingPageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Container(
-      padding: const EdgeInsets.all(tDefaultSpace),
+      padding: const EdgeInsets.all(TSizes.defaultSpace),
       color: model.bgColor,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,

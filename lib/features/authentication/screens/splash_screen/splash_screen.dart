@@ -28,7 +28,7 @@ class SplashScreen extends StatelessWidget {
             ),
             TFadeInAnimation(
               durationInMs: 1600,
-              animate: TAnimatePosition(topBefore: 100, topAfter: 100, leftAfter: tDefaultSpace, leftBefore: -100),
+              animate: TAnimatePosition(topBefore: 100, topAfter: 100, leftAfter: TSizes.defaultSpace, leftBefore: -100),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -44,11 +44,11 @@ class SplashScreen extends StatelessWidget {
             ),
             TFadeInAnimation(
               durationInMs: 2000,
-              animate: TAnimatePosition(bottomBefore: 0, bottomAfter: 60, rightBefore: tDefaultSpace, rightAfter: tDefaultSpace),
+              animate: TAnimatePosition(bottomBefore: 0, bottomAfter: 60, rightBefore: TSizes.defaultSpace, rightAfter: TSizes.defaultSpace),
               child: Container(
-                width: tSplashContainerSize,
-                height: tSplashContainerSize,
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: tPrimaryColor),
+                width: TSizes.xl,
+                height: TSizes.xl,
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: TColors.primary),
               ),
             ),
           ],

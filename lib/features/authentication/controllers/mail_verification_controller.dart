@@ -4,8 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
 import '../../../../utils/constants/text_strings.dart';
-import '../../../../utils/helper/helper_controller.dart';
 import '../../../data/repository/authentication_repository/authentication_repository.dart';
+import '../../../utils/popups/loaders.dart';
 
 class MailVerificationController extends GetxController {
   late Timer _timer;
@@ -22,7 +22,7 @@ class MailVerificationController extends GetxController {
     try {
       await AuthenticationRepository.instance.sendEmailVerification();
     } catch (e) {
-      Helper.errorSnackBar(title: tOhSnap, message: e.toString());
+      TLoaders.errorSnackBar(title: tOhSnap, message: e.toString());
     }
   }
 

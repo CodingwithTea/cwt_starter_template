@@ -8,8 +8,8 @@ import '../../../../../utils/constants/colors.dart';
 import '../../../../../utils/constants/image_strings.dart';
 import '../../../../../utils/constants/sizes.dart';
 import '../../../../../utils/constants/text_strings.dart';
-import '../login/login_screen.dart';
-import '../signup/signup_screen.dart';
+import '../email_authentication/login/login_screen.dart';
+import '../email_authentication/signup/signup_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -27,7 +27,7 @@ class WelcomeScreen extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: isDarkMode ? tSecondaryColor : tPrimaryColor,
+        backgroundColor: isDarkMode ? TColors.secondary : TColors.primary,
         body: Stack(
           children: [
             TFadeInAnimation(
@@ -44,7 +44,7 @@ class WelcomeScreen extends StatelessWidget {
                 rightBefore: 0,
               ),
               child: Container(
-                padding: const EdgeInsets.all(tDefaultSpace),
+                padding: const EdgeInsets.all(TSizes.defaultSpace),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [

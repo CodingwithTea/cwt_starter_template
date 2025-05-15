@@ -28,7 +28,7 @@ class DashboardCategories extends StatelessWidget {
                     Container(
                       width: 45,
                       height: 45,
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: tDarkColor),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: TColors.white),
                       child: Center(child: Text(list[index].title, style: txtTheme.titleLarge?.apply(color: Colors.white))),
                     ),
                     const SizedBox(width: 5),

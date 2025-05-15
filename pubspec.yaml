@@ -32,13 +32,21 @@ dependencies:
   cloud_firestore: ^5.6.7
   flutter_facebook_auth: ^7.1.2
   google_sign_in: ^6.3.0
+  firebase_storage: ^12.4.5
 
 
   ## -- ICON PACKAGES
+  iconsax: ^0.0.8
   cupertino_icons: ^1.0.8
   line_awesome_flutter: ^3.0.1
   flutter_native_splash: ^2.4.6
 
+  ## -- Utility PACKAGES
+  intl: ^0.20.2
+  logger: ^2.5.0
+  lottie: ^3.3.1
+  url_launcher: ^6.3.1
+  connectivity_plus: ^6.1.1
 
 
 dev_dependencies:

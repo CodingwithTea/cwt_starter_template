@@ -22,7 +22,7 @@ class DashboardBanners extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               //For Dark Color
-              color: isDark ? tSecondaryColor : tCardBgColor,
+              color: isDark ? TColors.secondary : TColors.cardBackgroundColor,
             ),
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
             child: Column(
@@ -40,7 +40,7 @@ class DashboardBanners extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(width: tDashboardCardPadding),
+        const SizedBox(width: TSizes.sm),
         //2nd Banner
         Expanded(
           child: Column(
@@ -50,7 +50,7 @@ class DashboardBanners extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   //For Dark Color
-                  color: isDark ? tSecondaryColor : tCardBgColor,
+                  color: isDark ? TColors.secondary : TColors.cardBackgroundColor,
                 ),
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
                 child: Column(
