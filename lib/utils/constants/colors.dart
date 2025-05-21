@@ -9,6 +9,9 @@ class TColors {
   static const Color secondaryBackground = Color(0xFFFFE4E6); // Secondary Color Background
   static const Color accent = Color(0xFF001BFF);
 
+  // Dashboard Specific Colors
+  static const Color dashboardAppbarBackground = Color(0xFF4b68ff);
+
   // Text colors
   static const Color textPrimary = Color(0xFF222A3D); // Theme Nightingale Gray 80
   static const Color textSecondary = Color(0xFF4B5363); // Theme Nightingale Gray 60

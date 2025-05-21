@@ -1,0 +1,229 @@
+import 'package:cwt_starter_template/utils/popups/exports.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import '../../common/widgets/loaders/circular_loader.dart';
+import '../../data/repository/authentication_repository/authentication_repository.dart';
+import '../../data/repository/user_repository/user_repository.dart';
+import '../../features/authentication/models/user_model.dart';
+import '../../routes/routes.dart';
+import '../../utils/constants/enums.dart';
+import '../../utils/constants/image_strings.dart';
+import '../../utils/constants/sizes.dart';
+import '../../utils/helpers/network_manager.dart';
+import '../screens/profile/re_authenticate_user_login_form.dart';
+
+class UserController extends GetxController {
+  static UserController get instance => Get.find();
+
+  /// Repositories
+  Rx<UserModel> user = UserModel.empty().obs;
+  final profileLoading = false.obs;
+  final hidePassword = false.obs;
+  final verifyEmail = TextEditingController();
+  final verifyPassword = TextEditingController();
+  final userRepository = Get.put(UserRepository());
+  GlobalKey<FormState> reAuthFormKey = GlobalKey<FormState>();
+
+  /// init user data when Home Screen appears
+  @override
+  void onInit() {
+    fetchUserRecord();
+    super.onInit();
+  }
+
+
+  /// Fetch user record
+  Future<void> fetchUserRecord() async {
+    try {
+      if (user.value.id.isEmpty) {
+        profileLoading.value = true;
+        final user = await userRepository.fetchUserDetails();
+        this.user(user);
+      }
+    } catch (e) {
+      TLoaders.warningSnackBar(title: 'Warning', message: 'Unable to fetch your information. Try again.');
+    } finally {
+      profileLoading.value = false;
+    }
+  }
+  /// Save user Record from any Registration provider
+  Future<void> saveUserRecord({UserModel? user, UserCredential? userCredentials}) async {
+    try {
+      // First UPDATE Rx User and then check if user data is already stored. If not store new data
+      await fetchUserRecord();
+
+      // If no record already stored.
+      if (this.user.value.id.isEmpty) {
+        if (userCredentials != null) {
+
+          // Map data
+          final newUser = UserModel(
+            id: userCredentials.user!.uid,
+            fullName: userCredentials.user!.displayName ?? '',
+            email: userCredentials.user!.email ?? '',
+            profilePicture: userCredentials.user!.photoURL ?? '',
+            deviceToken: user!.deviceToken,
+            isEmailVerified: true,
+            isProfileActive: true,
+            updatedAt: DateTime.now(),
+            createdAt: DateTime.now(),
+            verificationStatus: VerificationStatus.approved,
+            phoneNumber: '',
+          );
+
+          // Save user data
+          await userRepository.saveUserRecord(newUser);
+
+          // Assign new user to the RxUser so that we can use it through out the app.
+          this.user(newUser);
+        } else if (user != null) {
+          // Save Model when user registers using Email and Password
+          await userRepository.saveUserRecord(user);
+
+          // Assign new user to the RxUser so that we can use it through out the app.
+          this.user(user);
+        }
+      }
+    } catch (e) {
+      TLoaders.warningSnackBar(
+        title: 'Data not saved',
+        message: 'Something went wrong while saving your information. You can re-save your data in your Profile.',
+      );
+    }
+  }
+
+  /// Update user record after login (e.g., to update token)
+  Future<void> updateUserRecordWithToken(String newToken) async {
+    try {
+      // Ensure we have fetched the user record before updating
+      await fetchUserRecord();
+      // Create a map to store the fields we want to update (e.g., token)
+      Map<String, dynamic> updatedFields = {'deviceToken': newToken};
+
+      // Call the repository to update the specific fields
+      await userRepository.updateSingleField(updatedFields);
+
+      // Update the local RxUser object with the new token
+      user.value.deviceToken = newToken;
+      user.refresh();
+    } catch (e) {
+      TLoaders.errorSnackBar(
+        title: 'Error',
+        message: 'Failed to update user record: $e',
+      );
+    }
+  }
+
+  /// Delete Account Warning
+  void deleteAccountWarningPopup() {
+    Get.defaultDialog(
+      contentPadding: const EdgeInsets.all(TSizes.md),
+      title: 'Delete Account',
+      middleText:
+      'Are you sure you want to delete your account permanently? This action is not reversible and all of your data will be removed permanently.',
+      confirm: ElevatedButton(
+        onPressed: () async => deleteUserAccount(),
+        style: ElevatedButton.styleFrom(backgroundColor: Colors.red, side: const BorderSide(color: Colors.red)),
+        child: const Padding(padding: EdgeInsets.symmetric(horizontal: TSizes.lg), child: Text('Delete')),
+      ),
+      cancel: OutlinedButton(
+        child: const Text('Cancel'),
+        onPressed: () => Navigator.of(Get.overlayContext!).pop(),
+      ),
+    );
+  }
+
+  /// Delete User Account
+  void deleteUserAccount() async {
+    try {
+      TFullScreenLoader.openLoadingDialog('Processing', TImages.docerAnimation);
+
+      /// First re-authenticate user
+      final auth = AuthenticationRepository.instance;
+      final provider = auth.firebaseUser!.providerData.map((e) => e.providerId).first;
+      if (provider.isNotEmpty) {
+        // Re Verify Auth Email
+        if (provider == 'google.com') {
+          await auth.signInWithGoogle();
+          await auth.deleteAccount();
+          TFullScreenLoader.stopLoading();
+          Get.offAllNamed(TRoutes.logIn);
+        } else if (provider == 'facebook.com') {
+          TFullScreenLoader.stopLoading();
+          Get.offAllNamed(TRoutes.logIn);
+        } else if (provider == 'password') {
+          TFullScreenLoader.stopLoading();
+          Get.to(() => const ReAuthLoginForm());
+        }
+      }
+    } catch (e) {
+      TFullScreenLoader.stopLoading();
+      TLoaders.warningSnackBar(title: 'Oh Snap!', message: e.toString());
+    }
+  }
+
+  /// -- RE-AUTHENTICATE before deleting
+  Future<void> reAuthenticateEmailAndPasswordUser() async {
+    try {
+      TFullScreenLoader.openLoadingDialog('Processing', TImages.docerAnimation);
+
+      //Check Internet
+      final isConnected = await NetworkManager.instance.isConnected();
+      if (!isConnected) {
+        TFullScreenLoader.stopLoading();
+        return;
+      }
+
+      if (!reAuthFormKey.currentState!.validate()) {
+        TFullScreenLoader.stopLoading();
+        return;
+      }
+
+      await AuthenticationRepository.instance
+          .reAuthenticateWithEmailAndPassword(verifyEmail.text.trim(), verifyPassword.text.trim());
+      await AuthenticationRepository.instance.deleteAccount();
+      TFullScreenLoader.stopLoading();
+      Get.offAllNamed(TRoutes.logIn);
+    } catch (e) {
+      TFullScreenLoader.stopLoading();
+      TLoaders.warningSnackBar(title: 'Oh Snap!', message: e.toString());
+    }
+  }
+
+  /// Logout Loader Function
+  logout() {
+    try {
+      Get.defaultDialog(
+        contentPadding: const EdgeInsets.all(TSizes.md),
+        title: 'Logout',
+        middleText: 'Are you sure you want to Logout?',
+        confirm: ElevatedButton(
+          child: const Padding(
+            padding: EdgeInsets.symmetric(horizontal: TSizes.lg),
+            child: Text('Confirm'),
+          ),
+          onPressed: () async {
+            onClose();
+
+            /// On Confirmation show any loader until user Logged Out.
+            Get.defaultDialog(
+              title: '',
+              barrierDismissible: false,
+              backgroundColor: Colors.transparent,
+              content: const TCircularLoader(),
+            );
+            await AuthenticationRepository.instance.logout();
+          },
+        ),
+        cancel: OutlinedButton(
+          child: const Text('Cancel'),
+          onPressed: () => Navigator.of(Get.overlayContext!).pop(),
+        ),
+      );
+    } catch (e) {
+      TLoaders.errorSnackBar(title: 'Oh Snap', message: e.toString());
+    }
+  }
+}

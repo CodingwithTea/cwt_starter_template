@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:liquid_swipe/liquid_swipe.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -11,7 +12,7 @@ class OnBoardingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final obController = OnBoardingController();
+    final obController =  Get.put(OnBoardingController());
     return Scaffold(
       body: Stack(
         alignment: Alignment.center,
@@ -36,7 +37,7 @@ class OnBoardingScreen extends StatelessWidget {
               ),
               child: Container(
                 padding: const EdgeInsets.all(20.0),
-                decoration: const BoxDecoration(color: TColors.white, shape: BoxShape.circle),
+                decoration: const BoxDecoration(color: TColors.black, shape: BoxShape.circle),
                 child: const Icon(Icons.arrow_forward_ios),
               ),
             ),

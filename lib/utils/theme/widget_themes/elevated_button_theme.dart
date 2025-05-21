@@ -13,8 +13,8 @@ class TElevatedButtonTheme {
     style: ElevatedButton.styleFrom(
       elevation: 0,
       foregroundColor: TColors.white,
-      backgroundColor: TColors.white,
-      side: const BorderSide(color: TColors.white),
+      backgroundColor: TColors.dark,
+      side: const BorderSide(color: TColors.dark),
       padding: const EdgeInsets.symmetric(vertical: TSizes.buttonHeight),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(TSizes.borderRadiusLg)),
     ),

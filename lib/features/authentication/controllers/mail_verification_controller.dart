@@ -22,7 +22,7 @@ class MailVerificationController extends GetxController {
     try {
       await AuthenticationRepository.instance.sendEmailVerification();
     } catch (e) {
-      TLoaders.errorSnackBar(title: tOhSnap, message: e.toString());
+      TLoaders.errorSnackBar(title: TTexts.tOhSnap, message: e.toString());
     }
   }
 
@@ -33,7 +33,7 @@ class MailVerificationController extends GetxController {
       final user = FirebaseAuth.instance.currentUser;
       if (user!.emailVerified) {
         timer.cancel();
-        AuthenticationRepository.instance.setInitialScreen(user);
+        AuthenticationRepository.instance.screenRedirect(user);
       }
     });
   }
@@ -43,7 +43,7 @@ class MailVerificationController extends GetxController {
     FirebaseAuth.instance.currentUser?.reload();
     final user = FirebaseAuth.instance.currentUser;
     if (user!.emailVerified) {
-      AuthenticationRepository.instance.setInitialScreen(user);
+      AuthenticationRepository.instance.screenRedirect(user);
     }
   }
 }

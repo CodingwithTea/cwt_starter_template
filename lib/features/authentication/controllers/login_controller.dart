@@ -1,17 +1,20 @@
 import 'package:cwt_starter_template/utils/popups/exports.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
-import '../../../../utils/constants/text_strings.dart';
 import '../../../data/repository/authentication_repository/authentication_repository.dart';
-import '../../../data/repository/user_repository/user_repository.dart';
-import '../models/user_model.dart';
+import '../../../data/services/notifications/notification_service.dart';
+import '../../../personalization/controllers/user_controller.dart';
+import '../../../utils/constants/image_strings.dart';
+import '../../../utils/helpers/network_manager.dart';
 
 class LoginController extends GetxController {
   static LoginController get instance => Get.find();
 
   /// TextField Controllers to get data from TextFields
-  final showPassword = false.obs;
+  final hidePassword = true.obs;
+  final localStorage = GetStorage();
   final email = TextEditingController();
   final password = TextEditingController();
   GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
@@ -21,63 +24,112 @@ class LoginController extends GetxController {
   final isGoogleLoading = false.obs;
   final isFacebookLoading = false.obs;
 
+  @override
+  void onInit() {
+    email.text = localStorage.read('REMEMBER_ME_EMAIL') ?? '';
+    password.text = localStorage.read('REMEMBER_ME_PASSWORD') ?? '';
+    super.onInit();
+  }
+
   /// [EmailAndPasswordLogin]
-  Future<void> login() async {
+  Future<void> emailAndPasswordLogin() async {
     try {
-      isLoading.value = true;
-      if (!loginFormKey.currentState!.validate()) {
-        isLoading.value = false;
+      // Start Loading
+      TFullScreenLoader.openLoadingDialog('Logging you in...', TImages.docerAnimation);
+
+      // Check Internet Connectivity
+      final isConnected = await NetworkManager.instance.isConnected();
+      if (!isConnected) {
+        TFullScreenLoader.stopLoading();
+        TLoaders.customToast(message: 'No Internet Connection');
         return;
       }
-      final auth = AuthenticationRepository.instance;
-      await auth.loginWithEmailAndPassword(email.text.trim(), password.text.trim());
-      auth.setInitialScreen(auth.firebaseUser);
+
+      // Form Validation
+      if (!loginFormKey.currentState!.validate()) {
+        TFullScreenLoader.stopLoading();
+        return;
+      }
+
+      // Login user using EMail & Password Authentication
+      final userCredentials = await AuthenticationRepository.instance.loginWithEmailAndPassword(email.text.trim(), password.text.trim());
+
+      final token = await TNotificationService.getToken();
+      final userController = Get.put(UserController());
+      await  userController.updateUserRecordWithToken(token);
+      // Assign user data to RxUser of UserController to use in app
+      await userController.fetchUserRecord();
+
+      // Remove Loader
+      TFullScreenLoader.stopLoading();
+
+      // Redirect
+      await AuthenticationRepository.instance.screenRedirect(userCredentials.user);
     } catch (e) {
-      isLoading.value = false;
-      TLoaders.errorSnackBar(title: tOhSnap, message: e.toString());
+      TFullScreenLoader.stopLoading();
+      TLoaders.errorSnackBar(title: 'Oh Snap', message: e.toString());
     }
   }
 
   /// [GoogleSignInAuthentication]
   Future<void> googleSignIn() async {
     try {
-      isGoogleLoading.value = true;
-      final auth = AuthenticationRepository.instance;
-      // Sign In with Google
-      await auth.signInWithGoogle();
-      // Once the user Signed In, Check if the User Data is already stored in Firestore Collection('Users')
-      // If not store the data and let the user Login.
-      // [auth.getUserEmail] will return current LoggedIn user email.
-      // If record does not exit -> Create new
-      /// --  In this case or any case do not store password in the Firestore. This is just for learning purpose.
-      if (!await UserRepository.instance.recordExist(auth.getUserEmail)) {
-        UserModel user = UserModel(email: auth.getUserEmail, password: '', fullName: auth.getDisplayName, phoneNo: auth.getPhoneNo);
-        await UserRepository.instance.createUser(user);
+      // Start Loading
+      TFullScreenLoader.openLoadingDialog('Logging you in...', TImages.docerAnimation);
+
+      // Check Internet Connectivity
+      final isConnected = await NetworkManager.instance.isConnected();
+      if (!isConnected) {
+        TFullScreenLoader.stopLoading();
+        return;
       }
-      isGoogleLoading.value = false;
-      auth.setInitialScreen(auth.firebaseUser);
+
+      // Sign In with Google
+      final userCredentials = await AuthenticationRepository.instance.signInWithGoogle();
+
+      final userController = Get.put(UserController());
+      // Save Authenticated user data in the Firebase Firestore
+      await userController.saveUserRecord(userCredentials: userCredentials);
+
+      // Remove Loader
+      TFullScreenLoader.stopLoading();
+
+      // Redirect
+      await AuthenticationRepository.instance.screenRedirect(userCredentials?.user);
     } catch (e) {
-      isGoogleLoading.value = false;
-      TLoaders.errorSnackBar(title: tOhSnap, message: e.toString());
+      TFullScreenLoader.stopLoading();
+      TLoaders.errorSnackBar(title: 'Oh Snap', message: e.toString());
     }
   }
 
   /// [FacebookSignInAuthentication]
   Future<void> facebookSignIn() async {
     try {
-      isFacebookLoading.value = true;
-      final auth = AuthenticationRepository.instance;
-      await auth.signInWithFacebook();
+      // Start Loading
+      TFullScreenLoader.openLoadingDialog('Logging you in...', TImages.docerAnimation);
 
-      /// --  In this case or any case do not store password in the Firestore. This is just for learning purpose.
-      if (!await UserRepository.instance.recordExist(auth.getUserID)) {
-        UserModel user = UserModel(email: auth.getUserEmail, password: '', fullName: auth.getDisplayName, phoneNo: auth.getPhoneNo);
-        await UserRepository.instance.createUser(user);
+      // Check Internet Connectivity
+      final isConnected = await NetworkManager.instance.isConnected();
+      if (!isConnected) {
+        TFullScreenLoader.stopLoading();
+        return;
       }
-      isFacebookLoading.value = false;
+
+      // Facebook Authentication
+      final userCredentials = await AuthenticationRepository.instance.signInWithFacebook();
+
+      final userController = Get.put(UserController());
+      // Save Authenticated user data in the Firebase Firestore
+      await userController.saveUserRecord(userCredentials: userCredentials);
+
+      // Remove Loader
+      TFullScreenLoader.stopLoading();
+
+      // Redirect
+      await AuthenticationRepository.instance.screenRedirect(userCredentials.user);
     } catch (e) {
-      isFacebookLoading.value = false;
-      TLoaders.errorSnackBar(title: tOhSnap, message: e.toString());
+      TFullScreenLoader.stopLoading();
+      TLoaders.errorSnackBar(title: 'Oh Snap', message: e.toString());
     }
   }
 }

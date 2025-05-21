@@ -1,6 +1,7 @@
 import 'package:cwt_starter_template/utils/validators/validation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 import '../../../../../../common/widgets/buttons/primary_button.dart';
@@ -27,35 +28,35 @@ class SignUpFormWidget extends StatelessWidget {
                 if (value!.isEmpty) return 'Name cannot be empty';
                 return null;
               },
-              decoration: const InputDecoration(label: Text(tFullName), prefixIcon: Icon(LineAwesomeIcons.user)),
+              decoration: const InputDecoration(label: Text(TTexts.tFullName), prefixIcon: Icon(LineAwesomeIcons.user)),
             ),
             const SizedBox(height: TSizes.xl - 20),
             TextFormField(
               controller: controller.email,
               validator:  (value) => TValidator.validateEmail(value),
-              decoration: const InputDecoration(label: Text(tEmail), prefixIcon: Icon(LineAwesomeIcons.envelope)),
+              decoration: const InputDecoration(label: Text(TTexts.tEmail), prefixIcon: Icon(LineAwesomeIcons.envelope)),
             ),
             const SizedBox(height: TSizes.xl - 20),
             TextFormField(
-              controller: controller.phoneNo,
+              controller: controller.phoneNumber,
               validator: (value) {
                 if (value!.isEmpty) return 'Phone number cannot be empty';
                 return null;
               },
-              decoration: InputDecoration(label: Text(tPhoneNo), prefixIcon: Icon(LineAwesomeIcons.phone_solid)),
+              decoration: InputDecoration(label: Text(TTexts.tPhoneNo), prefixIcon: Icon(LineAwesomeIcons.phone_solid)),
             ),
             const SizedBox(height: TSizes.xl - 20),
             Obx(
               () => TextFormField(
+                obscureText: controller.hidePassword.value,
                 controller: controller.password,
                 validator: (value) => TValidator.validatePassword(value),
-                obscureText: controller.showPassword.value ? false : true,
                 decoration: InputDecoration(
-                  label: const Text(tPassword),
+                  label: const Text(TTexts.tPassword),
                   prefixIcon: const Icon(Icons.fingerprint),
                   suffixIcon: IconButton(
-                    icon: controller.showPassword.value ? const Icon(LineAwesomeIcons.eye) : const Icon(LineAwesomeIcons.eye_slash),
-                    onPressed: () => controller.showPassword.value = !controller.showPassword.value,
+                    onPressed: () => controller.hidePassword.value = !controller.hidePassword.value,
+                    icon: const Icon(Iconsax.eye_slash),
                   ),
                 ),
               ),
@@ -64,13 +65,13 @@ class SignUpFormWidget extends StatelessWidget {
             Obx(
               () => TPrimaryButton(
                 isLoading: controller.isLoading.value ? true : false,
-                text: tSignup.tr,
+                text: TTexts.tSignup.tr,
                 onPressed:
                     controller.isFacebookLoading.value || controller.isGoogleLoading.value
                         ? () {}
                         : controller.isLoading.value
                         ? () {}
-                        : () => controller.createUser(),
+                        : () => controller.signup(),
               ),
             ),
           ],

@@ -2,22 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../data/repository/authentication_repository/authentication_repository.dart';
-import '../../../data/repository/user_repository/user_repository.dart';
+import '../../../data/services/notifications/notification_service.dart';
+import '../../../personalization/controllers/user_controller.dart';
+import '../../../utils/constants/enums.dart';
+import '../../../utils/constants/image_strings.dart';
+import '../../../utils/helpers/network_manager.dart';
+import '../../../utils/popups/full_screen_loader.dart';
+import '../../../utils/popups/loaders.dart';
 import '../models/user_model.dart';
+import '../screens/email_authentication/signup/verify_email.dart';
 
 class SignUpController extends GetxController {
   static SignUpController get instance => Get.find();
 
-  final showPassword = false.obs;
   final isGoogleLoading = false.obs;
   final isFacebookLoading = false.obs;
-  GlobalKey<FormState> signupFormKey = GlobalKey<FormState>();
 
   // TextField Controllers to get data from TextFields
-  final email = TextEditingController();
-  final password = TextEditingController();
+
+  final hidePassword = true.obs;
   final fullName = TextEditingController();
-  final phoneNo = TextEditingController();
+  final email = TextEditingController();
+  final username = TextEditingController();
+  final password = TextEditingController();
+  final phoneNumber = TextEditingController();
+  GlobalKey<FormState> signupFormKey = GlobalKey<FormState>();
 
   /// Loader
   final isLoading = false.obs;
@@ -28,36 +37,88 @@ class SignUpController extends GetxController {
   // the change and call _setScreen() to switch screens
 
   /// Register New User using either [EmailAndPassword] OR [PhoneNumber] authentication
-  Future<void> createUser() async {
+  Future<void> signup() async {
     try {
-      isLoading.value = true;
-      if (!signupFormKey.currentState!.validate()) {
-        isLoading.value = false;
+      // Start Loading
+      TFullScreenLoader.openLoadingDialog('We are processing your information...', TImages.docerAnimation);
+
+      // Check Internet Connectivity
+      final isConnected = await NetworkManager.instance.isConnected();
+      if (!isConnected) {
+        TFullScreenLoader.stopLoading();
         return;
       }
+
+      // Form Validation
+      if (!signupFormKey.currentState!.validate()) {
+        TFullScreenLoader.stopLoading();
+        return;
+      }
+
+      // Register user in the Firebase Authentication & Save user data in the Firebase
+      await AuthenticationRepository.instance.registerWithEmailAndPassword(email.text.trim(), password.text.trim());
+
+      final token = await TNotificationService.getToken();
+
+      // Save Authenticated user data in the Firebase Firestore
+      final newUser = UserModel(
+        id: AuthenticationRepository.instance.getUserID,
+        fullName: fullName.text.trim(),
+        userName: username.text.trim(),
+        email: email.text.trim(),
+        phoneNumber: phoneNumber.text.trim(),
+        profilePicture: '',
+        deviceToken: token,
+        isEmailVerified: false,
+        isProfileActive: false,
+        updatedAt: DateTime.now(),
+        createdAt: DateTime.now(),
+        verificationStatus: VerificationStatus.approved,
+      );
+
+      final userController = Get.put(UserController());
+      await userController.saveUserRecord(user: newUser);
+
+      // Remove Loader
+      TFullScreenLoader.stopLoading();
+
+      // Show Success Message
+      TLoaders.successSnackBar(
+          title: 'Congratulations', message: 'Your account has been created! Verify email to continue.');
+
+      // Move to Verify Email Screen
+      Get.to(() => const VerifyEmailScreen());
 
       /// For Phone Authentication
       // SignUpController.instance.phoneAuthentication(controller.phoneNo.text.trim());
       // Get.to(() => const OTPScreen());
 
       // Get User and Pass it to Controller
-      final user = UserModel(email: email.text.trim(), password: password.text.trim(), fullName: fullName.text.trim(), phoneNo: phoneNo.text.trim());
-
-      // Authenticate User first
-      final auth = AuthenticationRepository.instance;
-      await auth.registerWithEmailAndPassword(user.email, user.password!);
-      await UserRepository.instance.createUser(user);
-      auth.setInitialScreen(auth.firebaseUser);
+      // final user = UserModel(
+      //   email: email.text.trim(),
+      //   // password: password.text.trim(),
+      //   // fullName: fullName.text.trim(),
+      //   // phoneNo: phoneNo.text.trim(),
+      //   id: '',
+      //   isEmailVerified: true, isProfileActive: true,
+      // );
+      //
+      // // Authenticate User first
+      // final auth = AuthenticationRepository.instance;
+      // await auth.registerWithEmailAndPassword(user.email, user.password!);
+      // await UserRepository.instance.createUser(user);
+      // auth.screenRedirect(auth.firebaseUser);
     } catch (e) {
-      isLoading.value = false;
-      Get.snackbar("Error", e.toString(), snackPosition: SnackPosition.BOTTOM, duration: const Duration(seconds: 5));
+      // Show some Generic Error to the user
+      TFullScreenLoader.stopLoading();
+      TLoaders.errorSnackBar(title: 'Oh Snap!', message: e.toString());
     }
   }
 
   /// [PhoneNoAuthentication]
-  Future<void> phoneAuthentication(String phoneNo) async {
+  Future<void> loginWithPhoneNumber(String phoneNo) async {
     try {
-      await AuthenticationRepository.instance.phoneAuthentication(phoneNo);
+      await AuthenticationRepository.instance.loginWithPhoneNo(phoneNo);
     } catch (e) {
       throw e.toString();
     }

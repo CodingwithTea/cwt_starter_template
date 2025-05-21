@@ -1,4 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
@@ -8,18 +10,27 @@ import 'package:google_sign_in/google_sign_in.dart';
 import '../../../features/authentication/screens/email_authentication/mail_verification/mail_verification.dart';
 import '../../../features/authentication/screens/on_boarding/on_boarding_screen.dart';
 import '../../../features/authentication/screens/welcome/welcome_screen.dart';
-import '../../../src/features/core/screens/dashboard/dashboard.dart';
-import 'exceptions/t_exceptions.dart';
+import '../../../home_menu.dart';
+import '../../../utils/exceptions/firebase_auth_exceptions.dart';
+import '../../../utils/exceptions/firebase_exceptions.dart';
+import '../../../utils/exceptions/format_exceptions.dart';
+import '../../../utils/exceptions/platform_exceptions.dart';
+import '../../../utils/local_storage/storage_utility.dart';
+import '../../../utils/popups/loaders.dart';
+import '../user_repository/user_repository.dart';
 
 /// -- README(Docs[6]) -- Bindings
 class AuthenticationRepository extends GetxController {
   static AuthenticationRepository get instance => Get.find();
 
   /// Variables
+  final deviceStorage = GetStorage();// Use this to store data locally (e.g. OnBoarding)
   late final Rx<User?> _firebaseUser;
+  var phoneNo = ''.obs;
+  var phoneNoVerificationId = ''.obs;
+  var isPhoneAutoVerified = false;
   final _auth = FirebaseAuth.instance;
-  final _phoneVerificationId = ''.obs;
-  final userStorage = GetStorage(); // Use this to store data locally (e.g. OnBoarding)
+  int? _resendToken;
 
   /// Getters
   User? get firebaseUser => _firebaseUser.value;
@@ -38,51 +49,84 @@ class AuthenticationRepository extends GetxController {
     _firebaseUser = Rx<User?>(_auth.currentUser);
     _firebaseUser.bindStream(_auth.userChanges());
     FlutterNativeSplash.remove();
-    setInitialScreen(_firebaseUser.value);
+    screenRedirect(_firebaseUser.value);
     // ever(_firebaseUser, _setInitialScreen);
   }
-
-  /// Setting initial screen
-  setInitialScreen(User? user) async {
+  /// Function to Show Relevant Screen
+  screenRedirect(User? user, {String phoneNumber = '', bool pinScreen = false, bool stopLoadingWhenReady = false}) async {
     if (user != null) {
-      user.emailVerified ? Get.offAll(() => const Dashboard()) : Get.offAll(() => const MailVerification());
+      // User Logged-In: If email verified let the user go to Home Screen else to the Email Verification Screen
+      if (user.emailVerified || user.phoneNumber != null) {
+        // Initialize User Specific Storage
+        await TLocalStorage.init(user.uid);
+        Get.offAll(() => const HomeMenu());
+      } else {
+        // Get.offAll(() => VerifyEmailScreen(email: getUserEmail));
+        Get.offAll(() => const MailVerification());
+      }
     } else {
-      // Check if it's the user's first time, then navigate accordingly
-      userStorage.writeIfNull('isFirstTime', true);
-      print(userStorage.read('isFirstTime'));
-      userStorage.read('isFirstTime') != true ? Get.offAll(() => const WelcomeScreen()) : Get.offAll(() => const OnBoardingScreen());
+      // Local Storage: User is new or Logged out! If new then write isFirstTime Local storage variable = true.
+      deviceStorage.writeIfNull('isFirstTime', true);
+      deviceStorage.read('isFirstTime') != true
+          ? Get.offAll(() => const WelcomeScreen())
+          : Get.offAll(() => const OnBoardingScreen());
     }
-
-    // Note: As per this code you will not see OnBoarding Screen on app launch.
-    // If you want to add that functionality please refer to this tutorial.
-    // https://www.youtube.com/watch?v=GYtMpccOOtU&t=78s
   }
 
   /* ---------------------------- Email & Password sign-in ---------------------------------*/
 
-  /// [EmailAuthentication] - LOGIN
-  Future<void> loginWithEmailAndPassword(String email, String password) async {
+  /// [EmailAuthentication] - SignIn
+  Future<UserCredential> loginWithEmailAndPassword(String email, String password) async {
     try {
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      return await _auth.signInWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (e) {
-      final result = TExceptions.fromCode(e.code); // Throw custom [message] variable
-      throw result.message;
-    } catch (_) {
-      const result = TExceptions();
-      throw result.message;
+      throw TFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw TFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const TFormatException();
+    } on PlatformException catch (e) {
+      throw TPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Something went wrong. Please try again';
     }
   }
 
   /// [EmailAuthentication] - REGISTER
-  Future<void> registerWithEmailAndPassword(String email, String password) async {
+  Future<UserCredential> registerWithEmailAndPassword(String email, String password) async {
     try {
-      await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      return await _auth.createUserWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (e) {
-      final ex = TExceptions.fromCode(e.code);
-      throw ex.message;
-    } catch (_) {
-      const ex = TExceptions();
-      throw ex.message;
+      throw TFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw TFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const TFormatException();
+    } on PlatformException catch (e) {
+      throw TPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Something went wrong. Please try again';
+    }
+  }
+
+  /// [ReAuthenticate] - ReAuthenticate User
+  Future<void> reAuthenticateWithEmailAndPassword(String email, String password) async {
+    try {
+      // Create a credential
+      AuthCredential credential = EmailAuthProvider.credential(email: email, password: password);
+
+      // ReAuthenticate
+      await _auth.currentUser!.reauthenticateWithCredential(credential);
+    } on FirebaseAuthException catch (e) {
+      throw TFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw TFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const TFormatException();
+    } on PlatformException catch (e) {
+      throw TPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Something went wrong. Please try again';
     }
   }
 
@@ -91,11 +135,32 @@ class AuthenticationRepository extends GetxController {
     try {
       await _auth.currentUser?.sendEmailVerification();
     } on FirebaseAuthException catch (e) {
-      final ex = TExceptions.fromCode(e.code);
-      throw ex.message;
-    } catch (_) {
-      const ex = TExceptions();
-      throw ex.message;
+      throw TFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw TFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const TFormatException();
+    } on PlatformException catch (e) {
+      throw TPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Something went wrong. Please try again';
+    }
+  }
+
+  /// [EmailAuthentication] - FORGET PASSWORD
+  Future<void> sendPasswordResetEmail(email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch (e) {
+      throw TFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw TFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const TFormatException();
+    } on PlatformException catch (e) {
+      throw TPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Something went wrong. Please try again';
     }
   }
 
@@ -111,16 +176,115 @@ class AuthenticationRepository extends GetxController {
       final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
 
       // Create a new credential
-      final credential = GoogleAuthProvider.credential(accessToken: googleAuth?.accessToken, idToken: googleAuth?.idToken);
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
 
       // Once signed in, return the UserCredential
       return await FirebaseAuth.instance.signInWithCredential(credential);
     } on FirebaseAuthException catch (e) {
-      final ex = TExceptions.fromCode(e.code);
-      throw ex.message;
-    } catch (_) {
-      const ex = TExceptions();
-      throw ex.message;
+      throw TFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw TFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const TFormatException();
+    } on PlatformException catch (e) {
+      throw TPlatformException(e.code).message;
+    } catch (e) {
+      debugPrint('Something went wrong: $e');
+      return null;
+    }
+  }
+
+  /* ---------------------------- Phone Number sign-in ---------------------------------*/
+
+  /// [PhoneAuthentication] - LOGIN - Register
+  Future<void> loginWithPhoneNo(String phoneNumber) async {
+    try {
+      await _auth.verifyPhoneNumber(
+        phoneNumber: phoneNumber,
+        forceResendingToken: _resendToken,
+        timeout: const Duration(minutes: 2),
+        verificationFailed: (e) async {
+          debugPrint('loginWithPhoneNo: verificationFailed => $e');
+          // await FirebaseCrashlytics.instance.recordError(e, e.stackTrace);
+
+          if (e.code == 'too-many-requests') {
+            // Get.offAllNamed(TRoutes.welcome);
+            Get.offAll(() => const WelcomeScreen());
+            TLoaders.warningSnackBar(
+                title: 'Too many attempts', message: 'Oops! Too many tries. Take a short break and try again soon!');
+            return;
+          } else if (e.code == 'unknown') {
+            Get.back(result: false);
+            TLoaders.warningSnackBar(
+                title: 'SMS not Sent', message: 'An internal error has occurred, We are working on it!');
+            return;
+          }
+          TLoaders.warningSnackBar(title: 'Oh Snap', message: e.message ?? '');
+        },
+        codeSent: (verificationId, resendToken) {
+          debugPrint('--------------- codeSent');
+          phoneNoVerificationId.value = verificationId;
+          _resendToken = resendToken;
+          debugPrint('--------------- codeSent: $verificationId');
+        },
+        verificationCompleted: (credential) async {
+          debugPrint('--------------- verificationCompleted');
+          var signedInUser = await _auth.signInWithCredential(credential);
+          isPhoneAutoVerified = signedInUser.user != null;
+
+          // await screenRedirect(
+          //   _auth.currentUser,
+          //   pinScreen: true,
+          //   stopLoadingWhenReady: true,
+          //   phoneNumber: phoneNumber,
+          // );
+          await screenRedirect(
+            _auth.currentUser,
+          );
+        },
+        codeAutoRetrievalTimeout: (verificationId) {
+          // phoneNoVerificationId.value = verificationId;
+          debugPrint('--------------- codeAutoRetrievalTimeout: $verificationId');
+        },
+      );
+      phoneNo.value = phoneNumber;
+    } on FirebaseAuthException catch (e) {
+      throw TFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw TFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const TFormatException();
+    } on PlatformException catch (e) {
+      throw TPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Something went wrong. Please try again';
+    }
+  }
+
+  /// [PhoneAuthentication] - VERIFY PHONE NO BY OTP
+  Future<bool> verifyOTP(String otp) async {
+    try {
+      final phoneCredentials = PhoneAuthProvider.credential(verificationId: phoneNoVerificationId.value, smsCode: otp);
+      var credentials = await _auth.signInWithCredential(phoneCredentials);
+      return credentials.user != null ? true : false;
+    } on FirebaseAuthException catch (e) {
+      // await FirebaseCrashlytics.instance.recordError(e, e.stackTrace);
+      throw TFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw TFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const TFormatException();
+    } on PlatformException catch (e) {
+      throw TPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Something went wrong. Please try again';
+    } finally {
+      phoneNo.value = '';
+      phoneNoVerificationId.value = '';
+      isPhoneAutoVerified = false;
     }
   }
 
@@ -133,62 +297,20 @@ class AuthenticationRepository extends GetxController {
       // Create a credential from the access token
       final AccessToken accessToken = loginResult.accessToken!;
       final OAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(accessToken.tokenString);
-      // final OAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(accessToken.token);
 
       // Once signed in, return the UserCredential
       return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
     } on FirebaseAuthException catch (e) {
-      throw e.message!;
-    } on FormatException catch (e) {
-      throw e.message;
+      throw TFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw TFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const TFormatException();
+    } on PlatformException catch (e) {
+      throw TPlatformException(e.code).message;
     } catch (e) {
-      throw 'Something went wrong. Try again!';
+      throw 'Something went wrong. Please try again';
     }
-  }
-
-  /// [PhoneAuthentication] - LOGIN
-  loginWithPhoneNo(String phoneNumber) async {
-    try {
-      await _auth.signInWithPhoneNumber(phoneNumber);
-    } on FirebaseAuthException catch (e) {
-      final ex = TExceptions.fromCode(e.code);
-      throw ex.message;
-    } catch (e) {
-      throw e.toString().isEmpty ? 'Unknown Error Occurred. Try again!' : e.toString();
-    }
-  }
-
-  /// [PhoneAuthentication] - REGISTER
-  Future<void> phoneAuthentication(String phoneNo) async {
-    try {
-      await _auth.verifyPhoneNumber(
-        phoneNumber: phoneNo,
-        verificationCompleted: (credential) async {
-          await _auth.signInWithCredential(credential);
-        },
-        codeSent: (verificationId, resendToken) {
-          _phoneVerificationId.value = verificationId;
-        },
-        codeAutoRetrievalTimeout: (verificationId) {
-          _phoneVerificationId.value = verificationId;
-        },
-        verificationFailed: (e) {
-          final result = TExceptions.fromCode(e.code);
-          throw result.message;
-        },
-      );
-    } on FirebaseAuthException catch (e) {
-      final result = TExceptions.fromCode(e.code);
-      throw result.message;
-    } catch (e) {
-      throw e.toString().isEmpty ? 'Unknown Error Occurred. Try again!' : e.toString();
-    }
-  }
-
-  /// [PhoneAuthentication] - VERIFY PHONE NO BY OTP
-  Future<bool> verifyOTP(String otp) async {
-    var credentials = await _auth.signInWithCredential(PhoneAuthProvider.credential(verificationId: _phoneVerificationId.value, smsCode: otp));
-    return credentials.user != null ? true : false;
   }
 
   /* ---------------------------- ./end Federated identity & social sign-in ---------------------------------*/
@@ -197,15 +319,37 @@ class AuthenticationRepository extends GetxController {
   Future<void> logout() async {
     try {
       await GoogleSignIn().signOut();
-      await FacebookAuth.instance.logOut();
-      await FirebaseAuth.instance.signOut();
+      // await FacebookAuth.instance.logOut();
+      // await FirebaseAuth.instance.signOut();
       Get.offAll(() => const WelcomeScreen());
     } on FirebaseAuthException catch (e) {
-      throw e.message!;
-    } on FormatException catch (e) {
-      throw e.message;
+      throw TFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw TFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const TFormatException();
+    } on PlatformException catch (e) {
+      throw TPlatformException(e.code).message;
     } catch (e) {
-      throw 'Unable to logout. Try again.';
+      throw 'Something went wrong. Please try again';
+    }
+  }
+
+  /// DELETE USER - Remove user Auth and Firestore Account.
+  Future<void> deleteAccount() async {
+    try {
+      await UserRepository.instance.removeUserRecord(_auth.currentUser!.uid);
+      await _auth.currentUser?.delete();
+    } on FirebaseAuthException catch (e) {
+      throw TFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw TFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const TFormatException();
+    } on PlatformException catch (e) {
+      throw TPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Something went wrong. Please try again';
     }
   }
 }

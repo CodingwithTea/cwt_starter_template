@@ -8,8 +8,8 @@ import '../../../../../utils/constants/colors.dart';
 import '../../../../../utils/constants/image_strings.dart';
 import '../../../../../utils/constants/sizes.dart';
 import '../../../../../utils/constants/text_strings.dart';
-import '../email_authentication/login/login_screen.dart';
 import '../email_authentication/signup/signup_screen.dart';
+import '../login/login_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -43,26 +43,34 @@ class WelcomeScreen extends StatelessWidget {
                 rightAfter: 0,
                 rightBefore: 0,
               ),
-              child: Container(
-                padding: const EdgeInsets.all(TSizes.defaultSpace),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Hero(tag: 'welcome-image-tag', child: Image(image: const AssetImage(tWelcomeScreenImage), width: width * 0.7, height: height * 0.6)),
-                    Column(
-                      children: [
-                        Text(tWelcomeTitle, style: Theme.of(context).textTheme.displayMedium),
-                        Text(tWelcomeSubTitle, style: Theme.of(context).textTheme.bodyLarge, textAlign: TextAlign.center),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Expanded(child: OutlinedButton(onPressed: () => Get.to(() => const LoginScreen()), child: Text(tLogin.toUpperCase()))),
-                        const SizedBox(width: 10.0),
-                        Expanded(child: ElevatedButton(onPressed: () => Get.to(() => const SignupScreen()), child: Text(tSignup.toUpperCase()))),
-                      ],
-                    ),
-                  ],
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(TSizes.defaultSpace),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Hero(
+                        tag: 'welcome-image-tag',
+                        child: Image(image: const AssetImage(TImages.tWelcomeScreenImage), width: width * 0.7, height: height * 0.6),
+                      ),
+                      const SizedBox(height: TSizes.spaceBtwSections),
+                      Column(
+                        children: [
+                          Text(TTexts.tWelcomeTitle, style: Theme.of(context).textTheme.displayMedium),
+                          const SizedBox(height: TSizes.sm),
+                          Text(TTexts.tWelcomeSubTitle, style: Theme.of(context).textTheme.bodyLarge, textAlign: TextAlign.center),
+                        ],
+                      ),
+                      const SizedBox(height: TSizes.spaceBtwSections),
+                      Row(
+                        children: [
+                          Expanded(child: OutlinedButton(onPressed: () => Get.to(() => const LoginScreen()), child: Text(TTexts.tLogin.toUpperCase()))),
+                          const SizedBox(width: 10.0),
+                          Expanded(child: ElevatedButton(onPressed: () => Get.to(() => const SignupScreen()), child: Text(TTexts.tSignup.toUpperCase()))),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

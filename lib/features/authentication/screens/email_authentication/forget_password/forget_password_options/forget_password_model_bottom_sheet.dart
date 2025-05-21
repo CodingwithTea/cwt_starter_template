@@ -17,20 +17,20 @@ class ForgetPasswordScreen {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(tForgetPasswordTitle, style: Theme.of(context).textTheme.displayMedium),
-                Text(tForgetPasswordSubTitle, style: Theme.of(context).textTheme.bodyMedium),
+                Text(TTexts.tForgetPasswordTitle, style: Theme.of(context).textTheme.displayMedium),
+                Text(TTexts.tForgetPasswordSubTitle, style: Theme.of(context).textTheme.bodyMedium),
                 const SizedBox(height: 30.0),
                 ForgetPasswordBtnWidget(
                   onTap: () {
                     Navigator.pop(context);
                     Get.to(() => const ForgetPasswordMailScreen());
                   },
-                  title: tEmail,
-                  subTitle: tResetViaEMail,
+                  title: TTexts.tEmail,
+                  subTitle: TTexts.tResetViaEMail,
                   btnIcon: Icons.mail_outline_rounded,
                 ),
                 const SizedBox(height: 20.0),
-                ForgetPasswordBtnWidget(onTap: () {}, title: tPhoneNo, subTitle: tResetViaPhone, btnIcon: Icons.mobile_friendly_rounded),
+                ForgetPasswordBtnWidget(onTap: () {}, title: TTexts.tPhoneNo, subTitle: TTexts.tResetViaPhone, btnIcon: Icons.mobile_friendly_rounded),
               ],
             ),
           ),

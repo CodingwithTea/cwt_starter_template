@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart';
 
-import '../constants/text_strings.dart' as TTexts;
+import '../constants/text_strings.dart';
 
 /// VALIDATION CLASS
 class TValidator {

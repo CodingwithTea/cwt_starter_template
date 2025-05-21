@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:liquid_swipe/PageHelpers/LiquidController.dart';
@@ -24,7 +23,6 @@ class OnBoardingController extends GetxController {
   animateToNextSlideWithLocalStorage() {
     if (controller.currentPage == 2) {
       userStorage.write('isFirstTime', false);
-      debugPrint(userStorage.read('isFirstTime'));
       Get.offAll(() => const WelcomeScreen());
     } else {
       controller.animateToPage(page: controller.currentPage + 1);
@@ -37,28 +35,28 @@ class OnBoardingController extends GetxController {
   final pages = [
     OnBoardingPageWidget(
       model: OnBoardingModel(
-        image: tOnBoardingImage1,
-        title: tOnBoardingTitle1,
-        subTitle: tOnBoardingSubTitle1,
-        counterText: tOnBoardingCounter1,
+        image: TImages.tOnBoardingImage1,
+        title: TTexts.tOnBoardingTitle1,
+        subTitle: TTexts.tOnBoardingSubTitle1,
+        counterText: TTexts.tOnBoardingCounter1,
         bgColor: TColors.onBoardingPage1Color,
       ),
     ),
     OnBoardingPageWidget(
       model: OnBoardingModel(
-        image: tOnBoardingImage2,
-        title: tOnBoardingTitle2,
-        subTitle: tOnBoardingSubTitle2,
-        counterText: tOnBoardingCounter2,
+        image: TImages.tOnBoardingImage2,
+        title: TTexts.tOnBoardingTitle2,
+        subTitle: TTexts.tOnBoardingSubTitle2,
+        counterText: TTexts.tOnBoardingCounter2,
         bgColor: TColors.onBoardingPage2Color,
       ),
     ),
     OnBoardingPageWidget(
       model: OnBoardingModel(
-        image: tOnBoardingImage3,
-        title: tOnBoardingTitle3,
-        subTitle: tOnBoardingSubTitle3,
-        counterText: tOnBoardingCounter3,
+        image: TImages.tOnBoardingImage3,
+        title: TTexts.tOnBoardingTitle3,
+        subTitle: TTexts.tOnBoardingSubTitle3,
+        counterText: TTexts.tOnBoardingCounter3,
         bgColor: TColors.onBoardingPage3Color,
       ),
     ),

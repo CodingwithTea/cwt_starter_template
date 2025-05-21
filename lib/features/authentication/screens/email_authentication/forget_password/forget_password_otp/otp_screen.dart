@@ -18,10 +18,10 @@ class OTPScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(tOtpTitle, style: GoogleFonts.montserrat(fontWeight: FontWeight.bold, fontSize: 80.0)),
-            Text(tOtpSubTitle.toUpperCase(), style: Theme.of(context).textTheme.titleLarge),
+            Text(TTexts.tOtpTitle, style: GoogleFonts.montserrat(fontWeight: FontWeight.bold, fontSize: 80.0)),
+            Text(TTexts.tOtpSubTitle.toUpperCase(), style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 40.0),
-            const Text("$tOtpMessage support@codingwitht.com", textAlign: TextAlign.center),
+            const Text("${TTexts.tOtpMessage} support@codingwitht.com", textAlign: TextAlign.center),
             const SizedBox(height: 20.0),
             OtpTextField(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -30,7 +30,7 @@ class OTPScreen extends StatelessWidget {
               filled: true,
               onSubmit: (code) {
                 otp = code;
-                OTPController.instance.verifyOTP(otp);
+                OTPController.instance.verifyOTP();
               },
             ),
             const SizedBox(height: 20.0),
@@ -38,9 +38,9 @@ class OTPScreen extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  OTPController.instance.verifyOTP(otp);
+                  OTPController.instance.verifyOTP();
                 },
-                child: const Text(tNext),
+                child: const Text(TTexts.tNext),
               ),
             ),
           ],
