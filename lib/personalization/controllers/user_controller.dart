@@ -7,12 +7,15 @@ import '../../common/widgets/loaders/circular_loader.dart';
 import '../../data/repository/authentication_repository/authentication_repository.dart';
 import '../../data/repository/user_repository/user_repository.dart';
 import '../../data/services/notifications/notification_service.dart';
+import '../../features/authentication/screens/welcome/welcome_screen.dart';
+import '../../utils/constants/text_strings.dart';
 import '../models/user_model.dart';
 import '../../routes/routes.dart';
 import '../../utils/constants/enums.dart';
 import '../../utils/constants/image_strings.dart';
 import '../../utils/constants/sizes.dart';
 import '../../utils/helpers/network_manager.dart';
+import '../screens/profile/profile_screen.dart';
 import '../screens/profile/re_authenticate_user_login_form.dart';
 
 class UserController extends GetxController {
@@ -26,6 +29,12 @@ class UserController extends GetxController {
   final verifyPassword = TextEditingController();
   final userRepository = Get.put(UserRepository());
   GlobalKey<FormState> reAuthFormKey = GlobalKey<FormState>();
+
+  // Profile Screen Controllers
+  final email = TextEditingController();
+  final phoneNo = TextEditingController();
+  final fullName = TextEditingController();
+  GlobalKey<FormState> updateUserProfileFormKey = GlobalKey<FormState>();
 
   /// init user data when Home Screen appears
   @override
@@ -95,6 +104,46 @@ class UserController extends GetxController {
     }
   }
 
+  Future<void> updateUserProfile() async {
+    try {
+      // Start Loading
+      TFullScreenLoader.openLoadingDialog('We are updating your information...', TImages.docerAnimation);
+
+      // Check Internet Connectivity
+      final isConnected = await NetworkManager.instance.isConnected();
+      if (!isConnected) {
+        TFullScreenLoader.stopLoading();
+        return;
+      }
+
+      // Form Validation
+      if (!updateUserProfileFormKey.currentState!.validate()) {
+        TFullScreenLoader.stopLoading();
+        return;
+      }
+
+      // Update user's first & last name in the Firebase Firestore
+      Map<String, dynamic> json = {'fullName': fullName.text.trim(), 'email': email.text.trim()};
+      await userRepository.updateSingleField(json);
+
+      // Update the Rx User value
+      user.value.fullName = fullName.text.trim();
+      user.value.email = email.text.trim();
+
+      // Remove Loader
+      TFullScreenLoader.stopLoading();
+
+      // Show Success Message
+      TLoaders.successSnackBar(title: 'Congratulations', message: 'Your Name has been updated.');
+
+      // Move to previous screen.
+      Get.off(() => const ProfileScreen());
+    } catch (e) {
+      TFullScreenLoader.stopLoading();
+      TLoaders.errorSnackBar(title: 'Oh Snap!', message: e.toString());
+    }
+  }
+
   /// Update user record after login (e.g., to update token)
   Future<void> updateUserRecordWithToken(String newToken) async {
     try {
@@ -157,6 +206,15 @@ class UserController extends GetxController {
         } else if (provider == 'password') {
           TFullScreenLoader.stopLoading();
           Get.to(() => const ReAuthLoginForm());
+        }else if (provider == 'phone') {
+          TFullScreenLoader.stopLoading();
+          await AuthenticationRepository.instance.loginWithPhoneNo(user.value.phoneNumber);
+          bool otpVerified = await Get.toNamed(TRoutes.reAuthenticateOtpVerification, parameters: {'phoneNumberWithCountryCode': user.value.phoneNumber});
+          if (otpVerified) {
+            TLoaders.successSnackBar(title: TTexts.phoneVerifiedTitle, message: TTexts.phoneVerifiedMessage);
+            await auth.deleteAccount();
+            Get.offAll(() => const WelcomeScreen());
+          }
         }
       }
     } catch (e) {
@@ -226,5 +284,11 @@ class UserController extends GetxController {
     } catch (e) {
       TLoaders.errorSnackBar(title: 'Oh Snap', message: e.toString());
     }
+  }
+
+  void assignDataToProfile(){
+    fullName.text = user.value.fullName;
+    email.text = user.value.email;
+    phoneNo.text = user.value.phoneNumber;
   }
 }

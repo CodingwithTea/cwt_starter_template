@@ -4,14 +4,14 @@ import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../../../utils/constants/colors.dart';
-import '../../../../../utils/constants/sizes.dart';
-import '../../../../../utils/constants/text_strings.dart';
-import '../../../../../utils/helpers/helper_functions.dart';
-import '../../../controllers/otp_controller.dart';
+import '../../../../utils/constants/colors.dart';
+import '../../../../utils/constants/sizes.dart';
+import '../../../../utils/constants/text_strings.dart';
+import '../../../../utils/helpers/helper_functions.dart';
+import '../../../features/authentication/controllers/otp_controller.dart';
 
-class PhoneOtpScreen extends StatelessWidget {
-  const PhoneOtpScreen({super.key});
+class ReAuthenticatePhoneOtpScreen extends StatelessWidget {
+  const ReAuthenticatePhoneOtpScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

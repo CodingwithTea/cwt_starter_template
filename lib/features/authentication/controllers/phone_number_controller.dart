@@ -45,7 +45,7 @@ class SignInController extends GetxController {
       if (!signInFormKey.currentState!.validate()) return;
 
       // Show loading dialog
-      TFullScreenLoader.openLoadingDialog(TTexts.sendingOTP, TImages.docerAnimation);
+      TFullScreenLoader.openLoadingDialog("Authenticating...", TImages.docerAnimation);
 
       // Check internet connectivity
       if (!await _checkInternetConnectivity()) return;

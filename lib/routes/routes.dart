@@ -8,4 +8,5 @@ class TRoutes {
   static const logIn = '/log-in';
   static const phoneSignIn = '/phone-sign-in';
   static const otpVerification = '/otp-verification';
+  static const reAuthenticateOtpVerification = '/re-authenticate-otp-verification';
 }

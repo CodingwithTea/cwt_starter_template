@@ -12,6 +12,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import '../../../features/authentication/screens/on_boarding/on_boarding_screen.dart';
 import '../../../features/authentication/screens/signup/verify_email.dart';
 import '../../../features/authentication/screens/welcome/welcome_screen.dart';
+import '../../../personalization/controllers/user_controller.dart';
 import '../../../utils/exceptions/firebase_auth_exceptions.dart';
 import '../../../utils/exceptions/firebase_exceptions.dart';
 import '../../../utils/exceptions/format_exceptions.dart';
@@ -54,23 +55,26 @@ class AuthenticationRepository extends GetxController {
     // ever(_firebaseUser, _setInitialScreen);
   }
   /// Function to Show Relevant Screen
-  screenRedirect(User? user, {String phoneNumber = '', bool stopLoadingWhenReady = false}) async {
+  screenRedirect(User? user) async {
     if (user != null) {
-      // User Logged-In: If email verified let the user go to Home Screen else to the Email Verification Screen
-      if (user.emailVerified || user.phoneNumber != null) {
+      // Fetch User Record
+      await UserController.instance.fetchUserRecord();
+
+      // Use this to check auth Role for admin
+      final idTokenResult = await _auth.currentUser!.getIdTokenResult();
+
+      // If email verified let the user go to Home Screen else to the Email Verification Screen
+      if (user.emailVerified || user.phoneNumber != null || idTokenResult.claims?['admin'] == true) {
         // Initialize User Specific Storage
         await TLocalStorage.init(user.uid);
         Get.offAll(() => const Dashboard());
       } else {
-        debugPrint(getUserEmail);
         Get.offAll(() => VerifyEmailScreen(email: getUserEmail));
       }
     } else {
       // Local Storage: User is new or Logged out! If new then write isFirstTime Local storage variable = true.
       deviceStorage.writeIfNull('isFirstTime', true);
-      deviceStorage.read('isFirstTime') != true
-          ? Get.offAll(() => const WelcomeScreen())
-          : Get.offAll(() => const OnBoardingScreen());
+      deviceStorage.read('isFirstTime') != true ? Get.offAll(() => const WelcomeScreen()) : Get.offAll(() => const OnBoardingScreen());
     }
   }
 

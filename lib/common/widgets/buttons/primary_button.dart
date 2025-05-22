@@ -25,7 +25,7 @@ class TPrimaryButton extends StatelessWidget {
         onPressed: onPressed,
         child: isLoading
             ? const ButtonLoadingWidget()
-            : Text(text.toUpperCase()),
+            : Text(text),
       ),
     );
   }

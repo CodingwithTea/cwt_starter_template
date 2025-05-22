@@ -158,7 +158,7 @@ class TTexts {
 
   // -- Update Profile Screen - Text
   static const String tDelete = "Delete";
-  static const String tJoined = "Joined";
+  static const String tJoined = "Joined ";
   static const String tJoinedAt = " 31 October 2022";
 
   // -- Validation

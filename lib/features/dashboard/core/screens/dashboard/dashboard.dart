@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../personalization/controllers/user_controller.dart';
 import '../../../../../utils/constants/image_strings.dart';
 import '../../../../../utils/constants/sizes.dart';
 import '../../../../../utils/constants/text_strings.dart';
@@ -17,6 +18,8 @@ class Dashboard extends StatelessWidget {
     //Variables
     final txtTheme = Theme.of(context).textTheme;
     final isDark = MediaQuery.of(context).platformBrightness == Brightness.dark; //Dark mode
+    final controller = UserController.instance;
+
 
     return SafeArea(
       child: Scaffold(
@@ -25,12 +28,12 @@ class Dashboard extends StatelessWidget {
         /// Create a new Header
         drawer: Drawer(
           child: ListView(
-            children: const [
+            children: [
               UserAccountsDrawerHeader(
                 currentAccountPicture: Image(image: AssetImage(TImages.tLogoImage)),
                 currentAccountPictureSize: Size(100, 100),
-                accountName: Text('Coding with T'),
-                accountEmail: Text('support@codingwithT.com'),
+                accountName: Text(controller.user.value.fullName),
+                accountEmail: Text(controller.user.value.email),
               ),
               ListTile(leading: Icon(Icons.home), title: Text('Home')),
               ListTile(leading: Icon(Icons.verified_user), title: Text('Profile')),
