@@ -6,7 +6,8 @@ import 'package:get/get.dart';
 import '../../common/widgets/loaders/circular_loader.dart';
 import '../../data/repository/authentication_repository/authentication_repository.dart';
 import '../../data/repository/user_repository/user_repository.dart';
-import '../../features/authentication/models/user_model.dart';
+import '../../data/services/notifications/notification_service.dart';
+import '../models/user_model.dart';
 import '../../routes/routes.dart';
 import '../../utils/constants/enums.dart';
 import '../../utils/constants/image_strings.dart';
@@ -57,14 +58,14 @@ class UserController extends GetxController {
       // If no record already stored.
       if (this.user.value.id.isEmpty) {
         if (userCredentials != null) {
-
+          final fcmToken = await TNotificationService.getToken();
           // Map data
           final newUser = UserModel(
             id: userCredentials.user!.uid,
             fullName: userCredentials.user!.displayName ?? '',
             email: userCredentials.user!.email ?? '',
             profilePicture: userCredentials.user!.photoURL ?? '',
-            deviceToken: user!.deviceToken,
+            deviceToken: fcmToken,
             isEmailVerified: true,
             isProfileActive: true,
             updatedAt: DateTime.now(),

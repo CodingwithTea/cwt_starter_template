@@ -87,6 +87,7 @@ class OTPController extends GetxController {
 
       // Verify OTP
       var isVerified = await AuthenticationRepository.instance.verifyOTP(otp);
+      AuthenticationRepository.instance.phoneNoVerificationId.value = "";
       TFullScreenLoader.stopLoading();
 
       // Return result to the previous screen

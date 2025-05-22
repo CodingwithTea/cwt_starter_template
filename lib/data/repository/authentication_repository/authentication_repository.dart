@@ -1,4 +1,6 @@
+import 'package:cwt_starter_template/features/dashboard/core/screens/dashboard/dashboard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -10,7 +12,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import '../../../features/authentication/screens/email_authentication/mail_verification/mail_verification.dart';
 import '../../../features/authentication/screens/on_boarding/on_boarding_screen.dart';
 import '../../../features/authentication/screens/welcome/welcome_screen.dart';
-import '../../../home_menu.dart';
 import '../../../utils/exceptions/firebase_auth_exceptions.dart';
 import '../../../utils/exceptions/firebase_exceptions.dart';
 import '../../../utils/exceptions/format_exceptions.dart';
@@ -48,8 +49,11 @@ class AuthenticationRepository extends GetxController {
   void onReady() {
     _firebaseUser = Rx<User?>(_auth.currentUser);
     _firebaseUser.bindStream(_auth.userChanges());
+    ever<User?>(_firebaseUser, (user) {
+      screenRedirect(user);
+    });
+    // screenRedirect(_firebaseUser.value);
     FlutterNativeSplash.remove();
-    screenRedirect(_firebaseUser.value);
     // ever(_firebaseUser, _setInitialScreen);
   }
   /// Function to Show Relevant Screen
@@ -59,7 +63,7 @@ class AuthenticationRepository extends GetxController {
       if (user.emailVerified || user.phoneNumber != null) {
         // Initialize User Specific Storage
         await TLocalStorage.init(user.uid);
-        Get.offAll(() => const HomeMenu());
+        Get.offAll(() => const Dashboard());
       } else {
         // Get.offAll(() => VerifyEmailScreen(email: getUserEmail));
         Get.offAll(() => const MailVerification());
@@ -208,7 +212,7 @@ class AuthenticationRepository extends GetxController {
         timeout: const Duration(minutes: 2),
         verificationFailed: (e) async {
           debugPrint('loginWithPhoneNo: verificationFailed => $e');
-          // await FirebaseCrashlytics.instance.recordError(e, e.stackTrace);
+          await FirebaseCrashlytics.instance.recordError(e, e.stackTrace);
 
           if (e.code == 'too-many-requests') {
             // Get.offAllNamed(TRoutes.welcome);
@@ -271,7 +275,7 @@ class AuthenticationRepository extends GetxController {
       var credentials = await _auth.signInWithCredential(phoneCredentials);
       return credentials.user != null ? true : false;
     } on FirebaseAuthException catch (e) {
-      // await FirebaseCrashlytics.instance.recordError(e, e.stackTrace);
+      await FirebaseCrashlytics.instance.recordError(e, e.stackTrace);
       throw TFirebaseAuthException(e.code).message;
     } on FirebaseException catch (e) {
       throw TFirebaseException(e.code).message;
@@ -283,7 +287,6 @@ class AuthenticationRepository extends GetxController {
       throw 'Something went wrong. Please try again';
     } finally {
       phoneNo.value = '';
-      phoneNoVerificationId.value = '';
       isPhoneAutoVerified = false;
     }
   }
@@ -318,6 +321,7 @@ class AuthenticationRepository extends GetxController {
   /// [LogoutUser] - Valid for any authentication.
   Future<void> logout() async {
     try {
+      await _auth.signOut();
       await GoogleSignIn().signOut();
       // await FacebookAuth.instance.logOut();
       // await FirebaseAuth.instance.signOut();

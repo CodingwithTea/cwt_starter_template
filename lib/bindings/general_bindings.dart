@@ -15,7 +15,6 @@ class GeneralBindings extends Bindings {
     Get.put(NetworkManager());
     /// -- Repository
     Get.lazyPut(() => AuthenticationRepository(), fenix: true);
-    Get.lazyPut(() => UserRepository(), fenix: true);
 
     Get.lazyPut(() => OnBoardingController(), fenix: true);
 

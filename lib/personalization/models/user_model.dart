@@ -1,13 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../../../utils/constants/enums.dart';
-import '../../../utils/formatters/formatter.dart';
+import '../../utils/constants/enums.dart';
+import '../../utils/formatters/formatter.dart';
 
 /// Model class representing user data.
 class UserModel {
   final String id;
   String fullName;
-  String userName;
   String email;
   String phoneNumber;
   String profilePicture;
@@ -27,7 +26,6 @@ class UserModel {
     required this.id,
     required this.email,
     this.fullName = '',
-    this.userName = '',
     this.phoneNumber = '',
     this.profilePicture = '',
     this.role = AppRole.user,
@@ -70,7 +68,6 @@ class UserModel {
     return {
       'id': id,
       'fullName': fullName,
-      'userName': userName,
       'email': email,
       'phoneNumber': phoneNumber,
       'profilePicture': profilePicture,
@@ -101,7 +98,6 @@ class UserModel {
     return UserModel(
       id: id,
       fullName: data.containsKey('fullName') ? data['fullName'] ?? '' : '',
-      userName: data.containsKey('userName') ? data['userName'] ?? '' : '',
       email: data.containsKey('email') ? data['email'] ?? '' : '',
       phoneNumber: data.containsKey('phoneNumber') ? data['phoneNumber'] ?? '' : '',
       profilePicture: data.containsKey('profilePicture') ? data['profilePicture'] ?? '' : '',
@@ -110,8 +106,8 @@ class UserModel {
           ? AppRole.admin
           : AppRole.user
           : AppRole.user,
-      createdAt: data.containsKey('CreatedAt') ? data['CreatedAt']?.toDate() ?? DateTime.now() : DateTime.now(),
-      updatedAt: data.containsKey('UpdatedAt') ? data['UpdatedAt']?.toDate() ?? DateTime.now() : DateTime.now(),
+      createdAt: data.containsKey('createdAt') ? data['createdAt']?.toDate() ?? DateTime.now() : DateTime.now(),
+      updatedAt: data.containsKey('updatedAt') ? data['updatedAt']?.toDate() ?? DateTime.now() : DateTime.now(),
       deviceToken: data.containsKey('deviceToken') ? data['deviceToken'] ?? '' : '',
       isEmailVerified: data.containsKey('isEmailVerified') ? data['isEmailVerified'] ?? false : false,
       isProfileActive: data.containsKey('isProfileActive') ? data['isProfileActive'] ?? false : false,

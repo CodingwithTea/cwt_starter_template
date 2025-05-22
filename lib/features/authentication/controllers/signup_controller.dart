@@ -4,12 +4,12 @@ import 'package:get/get.dart';
 import '../../../data/repository/authentication_repository/authentication_repository.dart';
 import '../../../data/services/notifications/notification_service.dart';
 import '../../../personalization/controllers/user_controller.dart';
+import '../../../personalization/models/user_model.dart';
 import '../../../utils/constants/enums.dart';
 import '../../../utils/constants/image_strings.dart';
 import '../../../utils/helpers/network_manager.dart';
 import '../../../utils/popups/full_screen_loader.dart';
 import '../../../utils/popups/loaders.dart';
-import '../models/user_model.dart';
 import '../screens/email_authentication/signup/verify_email.dart';
 
 class SignUpController extends GetxController {
@@ -23,7 +23,6 @@ class SignUpController extends GetxController {
   final hidePassword = true.obs;
   final fullName = TextEditingController();
   final email = TextEditingController();
-  final username = TextEditingController();
   final password = TextEditingController();
   final phoneNumber = TextEditingController();
   GlobalKey<FormState> signupFormKey = GlobalKey<FormState>();
@@ -64,7 +63,6 @@ class SignUpController extends GetxController {
       final newUser = UserModel(
         id: AuthenticationRepository.instance.getUserID,
         fullName: fullName.text.trim(),
-        userName: username.text.trim(),
         email: email.text.trim(),
         phoneNumber: phoneNumber.text.trim(),
         profilePicture: '',
@@ -83,31 +81,10 @@ class SignUpController extends GetxController {
       TFullScreenLoader.stopLoading();
 
       // Show Success Message
-      TLoaders.successSnackBar(
-          title: 'Congratulations', message: 'Your account has been created! Verify email to continue.');
+      TLoaders.successSnackBar(title: 'Congratulations', message: 'Your account has been created! Verify email to continue.');
 
       // Move to Verify Email Screen
       Get.to(() => const VerifyEmailScreen());
-
-      /// For Phone Authentication
-      // SignUpController.instance.phoneAuthentication(controller.phoneNo.text.trim());
-      // Get.to(() => const OTPScreen());
-
-      // Get User and Pass it to Controller
-      // final user = UserModel(
-      //   email: email.text.trim(),
-      //   // password: password.text.trim(),
-      //   // fullName: fullName.text.trim(),
-      //   // phoneNo: phoneNo.text.trim(),
-      //   id: '',
-      //   isEmailVerified: true, isProfileActive: true,
-      // );
-      //
-      // // Authenticate User first
-      // final auth = AuthenticationRepository.instance;
-      // await auth.registerWithEmailAndPassword(user.email, user.password!);
-      // await UserRepository.instance.createUser(user);
-      // auth.screenRedirect(auth.firebaseUser);
     } catch (e) {
       // Show some Generic Error to the user
       TFullScreenLoader.stopLoading();
