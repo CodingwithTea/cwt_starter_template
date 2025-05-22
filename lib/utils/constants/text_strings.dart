@@ -82,7 +82,7 @@ class TTexts {
   static const String confirmEmailSubTitle = "Congratulations! Your Account Awaits: Verify Your Email to Start Shopping and Experience a World of Unrivaled Deals and Personalized Offers.";
   static const String resendEmail = "Resend Email";
   static const String yourAccountCreatedTitle = "Your account successfully created!";
-  static const String yourAccountCreatedSubTitle = "Welcome to Your Ultimate Shopping Destination: Your Account is Created, Unleash the Joy of Seamless Online Shopping!";
+  static const String yourAccountCreatedSubTitle = "Welcome to Your Application: Your Account is Created, Unleash the Joy of Seamless Online Experience!";
 
 
   // -- Forget Password Text
@@ -100,17 +100,17 @@ class TTexts {
   // -- OTP Screen - Text
   static const String tOtpTitle = "CO\nDE";
   static const String tOtpSubTitle = "Verification";
-  static const String tOtpMessage = "Enter the verification code sent at ";
+  static const String tOtpMessage = "Enter the verification code sent on your Phone Number ";
 
   // -- Phone Number Authentication - Text
   static const String phoneNo = '07-71234-567';
   static const String selectCountry = 'Select Country';
   static const String signupScreenTitle = "signupScreenTitle";
   static const String signupScreenSubTitle = "signupScreenSubTitle";
-  static const String otpVerification = "otpVerification";
-  static const String signInSubTitle = "signInSubTitle";
+  static const String otpVerification = "OTP Verification";
+  static const String signInSubTitle = "We will send a one time SMS message.";
   static const String selectCountryCode = "Select Country Code";
-  static const String sendingOTP = "sendingOTP";
+  static const String sendingOTP = "Sending OTP...";
   static const String phoneVerifiedTitle = "Phone Verified";
   static const String phoneVerifiedMessage = "Your phone number has been verified.";
   static const String noInternet = "No Internet";
@@ -123,7 +123,7 @@ class TTexts {
   static const String enter6digitOTPCode = "Enter 6 digit OTP Code";
   static const String inText = "in";
   static const String resendOTP = "Re-Send OTP";
-  static const String thenLets = "Then let’s";
+  static const String thenLets = "Then let’s ";
 
   // -- Email Verification
   static const String tEmailVerificationTitle = "Verify your email address";

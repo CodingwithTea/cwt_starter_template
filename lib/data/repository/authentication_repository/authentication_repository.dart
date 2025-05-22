@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import '../../../features/authentication/screens/email_authentication/mail_verification/mail_verification.dart';
+import '../../../features/authentication/screens/email_authentication/signup/verify_email.dart';
 import '../../../features/authentication/screens/on_boarding/on_boarding_screen.dart';
 import '../../../features/authentication/screens/welcome/welcome_screen.dart';
 import '../../../utils/exceptions/firebase_auth_exceptions.dart';
@@ -49,15 +49,12 @@ class AuthenticationRepository extends GetxController {
   void onReady() {
     _firebaseUser = Rx<User?>(_auth.currentUser);
     _firebaseUser.bindStream(_auth.userChanges());
-    ever<User?>(_firebaseUser, (user) {
-      screenRedirect(user);
-    });
-    // screenRedirect(_firebaseUser.value);
     FlutterNativeSplash.remove();
+    screenRedirect(_firebaseUser.value);
     // ever(_firebaseUser, _setInitialScreen);
   }
   /// Function to Show Relevant Screen
-  screenRedirect(User? user, {String phoneNumber = '', bool pinScreen = false, bool stopLoadingWhenReady = false}) async {
+  screenRedirect(User? user, {String phoneNumber = '', bool stopLoadingWhenReady = false}) async {
     if (user != null) {
       // User Logged-In: If email verified let the user go to Home Screen else to the Email Verification Screen
       if (user.emailVerified || user.phoneNumber != null) {
@@ -65,8 +62,8 @@ class AuthenticationRepository extends GetxController {
         await TLocalStorage.init(user.uid);
         Get.offAll(() => const Dashboard());
       } else {
-        // Get.offAll(() => VerifyEmailScreen(email: getUserEmail));
-        Get.offAll(() => const MailVerification());
+        debugPrint(getUserEmail);
+        Get.offAll(() => VerifyEmailScreen(email: getUserEmail));
       }
     } else {
       // Local Storage: User is new or Logged out! If new then write isFirstTime Local storage variable = true.

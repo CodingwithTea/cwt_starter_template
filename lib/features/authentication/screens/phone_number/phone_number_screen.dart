@@ -16,7 +16,6 @@ class PhoneNumberScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dark = THelperFunctions.isDarkMode(context);
-    // final controller = SignInController.instance;
     final controller = Get.put(SignInController());
 
     return Scaffold(
