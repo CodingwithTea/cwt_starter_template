@@ -9,8 +9,8 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import '../../../features/authentication/screens/email_authentication/signup/verify_email.dart';
 import '../../../features/authentication/screens/on_boarding/on_boarding_screen.dart';
+import '../../../features/authentication/screens/signup/verify_email.dart';
 import '../../../features/authentication/screens/welcome/welcome_screen.dart';
 import '../../../utils/exceptions/firebase_auth_exceptions.dart';
 import '../../../utils/exceptions/firebase_exceptions.dart';

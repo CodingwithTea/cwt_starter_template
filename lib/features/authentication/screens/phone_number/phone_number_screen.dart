@@ -7,7 +7,7 @@ import '../../../../utils/constants/image_strings.dart';
 import '../../../../utils/constants/sizes.dart';
 import '../../../../utils/constants/text_strings.dart';
 import '../../../../utils/helpers/helper_functions.dart';
-import '../../controllers/sign_in_controller.dart';
+import '../../controllers/phone_number_controller.dart';
 import 'widget/phone_number_field.dart';
 
 class PhoneNumberScreen extends StatelessWidget {

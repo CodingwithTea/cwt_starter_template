@@ -7,7 +7,7 @@ import '../../../../../utils/constants/sizes.dart';
 import '../../../../../utils/constants/text_strings.dart';
 import '../../../../../utils/helpers/helper_functions.dart';
 import '../../../../../utils/validators/validation.dart';
-import '../../../controllers/sign_in_controller.dart';
+import '../../../controllers/phone_number_controller.dart';
 
 class TPhoneNumberField extends StatelessWidget {
   const TPhoneNumberField({super.key});

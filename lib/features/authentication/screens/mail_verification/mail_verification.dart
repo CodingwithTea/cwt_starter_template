@@ -5,7 +5,7 @@ import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import '../../../../../data/repository/authentication_repository/authentication_repository.dart';
 import '../../../../../utils/constants/sizes.dart';
 import '../../../../../utils/constants/text_strings.dart';
-import '../../../controllers/mail_verification_controller.dart';
+import '../../controllers/mail_verification_controller.dart';
 
 class MailVerification extends StatelessWidget {
   const MailVerification({super.key});

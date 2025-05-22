@@ -4,7 +4,11 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 import '../../../data/repository/authentication_repository/authentication_repository.dart';
+import '../../../data/services/notifications/notification_service.dart';
+import '../../../personalization/controllers/user_controller.dart';
+import '../../../personalization/models/user_model.dart';
 import '../../../routes/routes.dart';
+import '../../../utils/constants/enums.dart';
 import '../../../utils/constants/image_strings.dart';
 import '../../../utils/constants/text_strings.dart';
 import '../../../utils/formatters/formatter.dart';
@@ -61,6 +65,13 @@ class SignInController extends GetxController {
       if (otpVerified) {
         // Show success message if OTP is verified
         TLoaders.successSnackBar(title: TTexts.phoneVerifiedTitle, message: TTexts.phoneVerifiedMessage);
+        // Register new user in the Firestore, if not already registered.
+
+        Get.put(UserController());
+        await UserController.instance.fetchUserRecord();
+        if (UserController.instance.user.value.id.isEmpty) {
+          await registerUserInTheDatabase(formattedPhoneNumber);
+        }
 
         // Redirect to the appropriate screen
         await AuthenticationRepository.instance.screenRedirect(FirebaseAuth.instance.currentUser);
@@ -93,4 +104,28 @@ class SignInController extends GetxController {
     TFullScreenLoader.stopLoading();
     TLoaders.errorSnackBar(title: TTexts.ohSnap, message: e.toString());
   }
+
+  Future<void> registerUserInTheDatabase(String phoneNumber) async {
+    final token = await TNotificationService.getToken();
+
+    // Save Authenticated user data in the Firebase Firestore
+    final newUser = UserModel(
+      id: AuthenticationRepository.instance.getUserID,
+      fullName: '',
+      email: '',
+      phoneNumber: phoneNumber,
+      profilePicture: '',
+      deviceToken: token,
+      isEmailVerified: false,
+      isProfileActive: false,
+      updatedAt: DateTime.now(),
+      createdAt: DateTime.now(),
+      role: AppRole.user,
+      verificationStatus: VerificationStatus.approved,
+    );
+
+    final userController = Get.put(UserController());
+    await userController.saveUserRecord(user: newUser);
+  }
+
 }

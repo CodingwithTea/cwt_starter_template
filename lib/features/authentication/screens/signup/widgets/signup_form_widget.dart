@@ -7,7 +7,7 @@ import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import '../../../../../../common/widgets/buttons/primary_button.dart';
 import '../../../../../../utils/constants/sizes.dart';
 import '../../../../../../utils/constants/text_strings.dart';
-import '../../../../controllers/signup_controller.dart';
+import '../../../controllers/signup_controller.dart';
 
 class SignUpFormWidget extends StatelessWidget {
   const SignUpFormWidget({super.key});
