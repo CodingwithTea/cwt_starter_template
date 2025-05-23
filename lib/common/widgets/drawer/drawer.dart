@@ -50,10 +50,11 @@ class TDrawer extends StatelessWidget {
   /// Each item includes an icon, title, and an optional subtitle.
   List<Widget> _drawerItems() {
     return [
-      _buildDrawerItem(icon: Icons.home, title: "Home", onTap: () => Get.toNamed(TRoutes.coursesDashboard)),
       _buildDrawerItem(icon: Icons.verified_user, title: "Profile", onTap: () => Get.toNamed(TRoutes.profileScreen)),
-      _buildDrawerItem(icon: Icons.shopping_bag, title: "Shop", onTap: () {}),
-      _buildDrawerItem(icon: Icons.favorite, title: "Wishlist", onTap: () {}),
+      _buildDrawerItem(icon: Icons.home, title: "E-Commerce Dashboard", onTap: ()  => Get.toNamed(TRoutes.eComDashboard)),
+      _buildDrawerItem(icon: Icons.add_shopping_cart, title: "Cart", onTap: ()  => Get.toNamed(TRoutes.cartScreen)),
+      _buildDrawerItem(icon: Icons.shopping_bag, title: "Checkout", onTap: ()  => Get.toNamed(TRoutes.checkoutScreen)),
+      _buildDrawerItem(icon: Icons.favorite, title: "Wishlist", onTap: () => Get.toNamed(TRoutes.favouritesScreen)),
     ];
   }
 

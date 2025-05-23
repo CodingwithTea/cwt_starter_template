@@ -1,3 +1,6 @@
+import 'package:cwt_starter_template/features/cart/controllers/cart_controller.dart';
+import 'package:cwt_starter_template/features/checkout/controllers/checkout_controller.dart';
+import 'package:cwt_starter_template/features/products/controllers/product_controller.dart';
 import 'package:get/get.dart';
 
 import '../data/repository/authentication_repository/authentication_repository.dart';
@@ -6,6 +9,7 @@ import '../features/authentication/controllers/login_controller.dart';
 import '../features/authentication/controllers/on_boarding_controller.dart';
 import '../features/authentication/controllers/otp_controller.dart';
 import '../features/authentication/controllers/signup_controller.dart';
+import '../personalization/controllers/address_controller.dart';
 import '../personalization/controllers/notification_controller.dart';
 import '../personalization/controllers/user_controller.dart';
 import '../utils/helpers/network_manager.dart';
@@ -17,6 +21,11 @@ class GeneralBindings extends Bindings {
     Get.put(NetworkManager());
     /// -- Repository
     Get.lazyPut(() => AuthenticationRepository(), fenix: true);
+    Get.lazyPut(() => UserController());
+    Get.put(CartController());
+    Get.lazyPut(() => CheckoutController());
+    Get.put(ProductController());
+    Get.lazyPut(() => AddressController());
 
     Get.lazyPut(() => OnBoardingController(), fenix: true);
 
@@ -25,7 +34,6 @@ class GeneralBindings extends Bindings {
     Get.lazyPut(() => OTPController(), fenix: true);
     Get.put(TNotificationService());
     Get.lazyPut(() => NotificationController(), fenix: true);
-    Get.lazyPut(() => UserController());
 
   }
 }

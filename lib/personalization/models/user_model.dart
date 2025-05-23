@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../utils/constants/enums.dart';
 import '../../utils/formatters/formatter.dart';
+import 'address_model.dart';
 
 /// Model class representing user data.
 class UserModel {
@@ -21,6 +22,8 @@ class UserModel {
 
   String deviceToken;
 
+  final List<AddressModel>? addresses;
+
   /// Constructor for UserModel.
   UserModel({
     required this.id,
@@ -35,6 +38,7 @@ class UserModel {
     required this.isEmailVerified,
     required this.isProfileActive,
     this.verificationStatus = VerificationStatus.unknown,
+    this.addresses,
   });
 
   /// Helper methods

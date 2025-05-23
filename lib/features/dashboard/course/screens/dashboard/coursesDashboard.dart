@@ -18,7 +18,6 @@ class CoursesDashboard extends StatelessWidget {
     //Variables
     final txtTheme = Theme.of(context).textTheme;
     final isDark = MediaQuery.of(context).platformBrightness == Brightness.dark; //Dark mode
-    final controller = UserController.instance;
 
 
     return SafeArea(
@@ -34,7 +33,7 @@ class CoursesDashboard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 //Heading
-                Text(TTexts.tDashboardTitle, style: txtTheme.bodyMedium),
+                Text(UserController.instance.user.value.fullName.isEmpty ? TTexts.tDashboardTitle: "Hey, ${UserController.instance.user.value.fullName}", style: txtTheme.bodyMedium),
                 Text(TTexts.tDashboardHeading, style: txtTheme.displayMedium),
                 const SizedBox(height: TSizes.lg),
 

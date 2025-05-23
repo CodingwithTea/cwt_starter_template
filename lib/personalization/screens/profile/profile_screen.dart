@@ -1,3 +1,4 @@
+import 'package:cwt_starter_template/personalization/controllers/user_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
@@ -30,8 +31,8 @@ class ProfileScreen extends StatelessWidget {
               /// -- IMAGE with ICON
               const ImageWithIcon(),
               const SizedBox(height: 10),
-              Text(TTexts.tProfileHeading, style: Theme.of(context).textTheme.headlineMedium),
-              Text(TTexts.tProfileSubHeading, style: Theme.of(context).textTheme.bodyMedium),
+              Text(UserController.instance.user.value.fullName.isEmpty ? TTexts.tProfileHeading: UserController.instance.user.value.fullName, style: Theme.of(context).textTheme.headlineMedium),
+              Text(UserController.instance.user.value.email.isEmpty ? TTexts.tProfileSubHeading : UserController.instance.user.value.email, style: Theme.of(context).textTheme.bodyMedium),
               const SizedBox(height: 20),
 
               /// -- BUTTON

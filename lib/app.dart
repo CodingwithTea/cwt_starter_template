@@ -1,6 +1,5 @@
 import 'package:cwt_starter_template/bindings/general_bindings.dart';
 import 'package:cwt_starter_template/routes/app_routes.dart';
-import 'package:cwt_starter_template/routes/routes.dart';
 import 'package:cwt_starter_template/utils/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

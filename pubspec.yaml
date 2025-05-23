@@ -59,6 +59,7 @@ dependencies:
   supabase_flutter: ^2.9.0
 
 
+  http: any
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -78,5 +79,11 @@ flutter:
     - assets/images/forget_password/
     - assets/images/on_boarding_images/
     - assets/images/animations/
+    - assets/images/banners/
+    - assets/icons/payment_methods/
+    - assets/images/products/
+    - assets/images/brands/
+    - assets/icons/categories/
+    - assets/icons/payment_methods/paypal.png
 
 # Splash screen has been added in the 'splash.yaml' file in main project directory
