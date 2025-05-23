@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../../../../personalization/screens/profile/profile_screen.dart';
+import '../../../../../../routes/routes.dart';
 import '../../../../../../utils/constants/colors.dart';
 import '../../../../../../utils/constants/image_strings.dart';
 import '../../../../../../utils/constants/text_strings.dart';
@@ -23,7 +23,7 @@ class DashboardAppBar extends StatelessWidget implements PreferredSizeWidget {
           margin: const EdgeInsets.only(right: 20, top: 7),
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: isDark ? TColors.secondary : TColors.cardBackgroundColor),
           child: IconButton(
-            onPressed: () => Get.to(() => const ProfileScreen()),
+            onPressed: () => Get.toNamed(TRoutes.profileScreen),
             icon: const Image(image: AssetImage(TImages.tUserProfileImage)),
           ),
         ),

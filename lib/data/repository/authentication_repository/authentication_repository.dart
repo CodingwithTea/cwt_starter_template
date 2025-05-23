@@ -1,4 +1,4 @@
-import 'package:cwt_starter_template/features/dashboard/core/screens/dashboard/dashboard.dart';
+import 'package:cwt_starter_template/routes/routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,7 +9,6 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import '../../../features/authentication/screens/on_boarding/on_boarding_screen.dart';
 import '../../../features/authentication/screens/signup/verify_email.dart';
 import '../../../features/authentication/screens/welcome/welcome_screen.dart';
 import '../../../personalization/controllers/user_controller.dart';
@@ -67,14 +66,14 @@ class AuthenticationRepository extends GetxController {
       if (user.emailVerified || user.phoneNumber != null || idTokenResult.claims?['admin'] == true) {
         // Initialize User Specific Storage
         await TLocalStorage.init(user.uid);
-        Get.offAll(() => const Dashboard());
+        Get.offAllNamed(TRoutes.coursesDashboard);
       } else {
         Get.offAll(() => VerifyEmailScreen(email: getUserEmail));
       }
     } else {
       // Local Storage: User is new or Logged out! If new then write isFirstTime Local storage variable = true.
       deviceStorage.writeIfNull('isFirstTime', true);
-      deviceStorage.read('isFirstTime') != true ? Get.offAll(() => const WelcomeScreen()) : Get.offAll(() => const OnBoardingScreen());
+      deviceStorage.read('isFirstTime') != true ? Get.offAllNamed(TRoutes.welcome) : Get.offAllNamed(TRoutes.onboarding);
     }
   }
 

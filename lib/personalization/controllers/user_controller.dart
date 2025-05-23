@@ -15,7 +15,6 @@ import '../../utils/constants/enums.dart';
 import '../../utils/constants/image_strings.dart';
 import '../../utils/constants/sizes.dart';
 import '../../utils/helpers/network_manager.dart';
-import '../screens/profile/profile_screen.dart';
 import '../screens/profile/re_authenticate_user_login_form.dart';
 
 class UserController extends GetxController {
@@ -137,7 +136,7 @@ class UserController extends GetxController {
       TLoaders.successSnackBar(title: 'Congratulations', message: 'Your Name has been updated.');
 
       // Move to previous screen.
-      Get.off(() => const ProfileScreen());
+      Get.offNamed(TRoutes.profileScreen);
     } catch (e) {
       TFullScreenLoader.stopLoading();
       TLoaders.errorSnackBar(title: 'Oh Snap!', message: e.toString());
