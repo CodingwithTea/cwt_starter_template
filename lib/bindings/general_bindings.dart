@@ -6,7 +6,7 @@ import '../features/authentication/controllers/login_controller.dart';
 import '../features/authentication/controllers/on_boarding_controller.dart';
 import '../features/authentication/controllers/otp_controller.dart';
 import '../features/authentication/controllers/signup_controller.dart';
-import '../personalization/controllers/notifcation_controller.dart';
+import '../personalization/controllers/notification_controller.dart';
 import '../personalization/controllers/user_controller.dart';
 import '../utils/helpers/network_manager.dart';
 

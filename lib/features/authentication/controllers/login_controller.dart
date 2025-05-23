@@ -103,33 +103,33 @@ class LoginController extends GetxController {
   }
 
   /// [FacebookSignInAuthentication]
-  Future<void> facebookSignIn() async {
-    try {
-      // Start Loading
-      TFullScreenLoader.openLoadingDialog('Logging you in...', TImages.docerAnimation);
-
-      // Check Internet Connectivity
-      final isConnected = await NetworkManager.instance.isConnected();
-      if (!isConnected) {
-        TFullScreenLoader.stopLoading();
-        return;
-      }
-
-      // Facebook Authentication
-      final userCredentials = await AuthenticationRepository.instance.signInWithFacebook();
-
-      final userController = Get.put(UserController());
-      // Save Authenticated user data in the Firebase Firestore
-      await userController.saveUserRecord(userCredentials: userCredentials);
-
-      // Remove Loader
-      TFullScreenLoader.stopLoading();
-
-      // Redirect
-      await AuthenticationRepository.instance.screenRedirect(userCredentials.user);
-    } catch (e) {
-      TFullScreenLoader.stopLoading();
-      TLoaders.errorSnackBar(title: 'Oh Snap', message: e.toString());
-    }
-  }
+  // Future<void> facebookSignIn() async {
+  //   try {
+  //     // Start Loading
+  //     TFullScreenLoader.openLoadingDialog('Logging you in...', TImages.docerAnimation);
+  //
+  //     // Check Internet Connectivity
+  //     final isConnected = await NetworkManager.instance.isConnected();
+  //     if (!isConnected) {
+  //       TFullScreenLoader.stopLoading();
+  //       return;
+  //     }
+  //
+  //     // Facebook Authentication
+  //     final userCredentials = await AuthenticationRepository.instance.signInWithFacebook();
+  //
+  //     final userController = Get.put(UserController());
+  //     // Save Authenticated user data in the Firebase Firestore
+  //     await userController.saveUserRecord(userCredentials: userCredentials);
+  //
+  //     // Remove Loader
+  //     TFullScreenLoader.stopLoading();
+  //
+  //     // Redirect
+  //     await AuthenticationRepository.instance.screenRedirect(userCredentials.user);
+  //   } catch (e) {
+  //     TFullScreenLoader.stopLoading();
+  //     TLoaders.errorSnackBar(title: 'Oh Snap', message: e.toString());
+  //   }
+  // }
 }

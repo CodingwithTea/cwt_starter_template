@@ -1,9 +1,8 @@
-import 'package:cwt_starter_template/routes/routes.dart';
+import 'package:cwt_starter_template/features/authentication/screens/on_boarding/on_boarding_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -11,6 +10,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../../features/authentication/screens/signup/verify_email.dart';
 import '../../../features/authentication/screens/welcome/welcome_screen.dart';
+import '../../../features/dashboard/course/screens/dashboard/coursesDashboard.dart';
 import '../../../personalization/controllers/user_controller.dart';
 import '../../../utils/exceptions/firebase_auth_exceptions.dart';
 import '../../../utils/exceptions/firebase_exceptions.dart';
@@ -25,7 +25,7 @@ class AuthenticationRepository extends GetxController {
   static AuthenticationRepository get instance => Get.find();
 
   /// Variables
-  final deviceStorage = GetStorage();// Use this to store data locally (e.g. OnBoarding)
+  final deviceStorage = GetStorage(); // Use this to store data locally (e.g. OnBoarding)
   late final Rx<User?> _firebaseUser;
   var phoneNo = ''.obs;
   var phoneNoVerificationId = ''.obs;
@@ -53,6 +53,7 @@ class AuthenticationRepository extends GetxController {
     screenRedirect(_firebaseUser.value);
     // ever(_firebaseUser, _setInitialScreen);
   }
+
   /// Function to Show Relevant Screen
   screenRedirect(User? user) async {
     if (user != null) {
@@ -66,14 +67,18 @@ class AuthenticationRepository extends GetxController {
       if (user.emailVerified || user.phoneNumber != null || idTokenResult.claims?['admin'] == true) {
         // Initialize User Specific Storage
         await TLocalStorage.init(user.uid);
-        Get.offAllNamed(TRoutes.coursesDashboard);
+        Get.offAll(() => const CoursesDashboard());
       } else {
         Get.offAll(() => VerifyEmailScreen(email: getUserEmail));
       }
-    } else {
-      // Local Storage: User is new or Logged out! If new then write isFirstTime Local storage variable = true.
+    }
+    else {
       deviceStorage.writeIfNull('isFirstTime', true);
-      deviceStorage.read('isFirstTime') != true ? Get.offAllNamed(TRoutes.welcome) : Get.offAllNamed(TRoutes.onboarding);
+      if (deviceStorage.read('isFirstTime') == true) {
+        Get.offAll(() => const WelcomeScreen());
+      } else {
+        Get.offAll(() => const OnBoardingScreen());
+      }
     }
   }
 
@@ -180,10 +185,7 @@ class AuthenticationRepository extends GetxController {
       final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
 
       // Create a new credential
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth?.accessToken,
-        idToken: googleAuth?.idToken,
-      );
+      final credential = GoogleAuthProvider.credential(accessToken: googleAuth?.accessToken, idToken: googleAuth?.idToken);
 
       // Once signed in, return the UserCredential
       return await FirebaseAuth.instance.signInWithCredential(credential);
@@ -217,13 +219,11 @@ class AuthenticationRepository extends GetxController {
           if (e.code == 'too-many-requests') {
             // Get.offAllNamed(TRoutes.welcome);
             Get.offAll(() => const WelcomeScreen());
-            TLoaders.warningSnackBar(
-                title: 'Too many attempts', message: 'Oops! Too many tries. Take a short break and try again soon!');
+            TLoaders.warningSnackBar(title: 'Too many attempts', message: 'Oops! Too many tries. Take a short break and try again soon!');
             return;
           } else if (e.code == 'unknown') {
             Get.back(result: false);
-            TLoaders.warningSnackBar(
-                title: 'SMS not Sent', message: 'An internal error has occurred, We are working on it!');
+            TLoaders.warningSnackBar(title: 'SMS not Sent', message: 'An internal error has occurred, We are working on it!');
             return;
           }
           TLoaders.warningSnackBar(title: 'Oh Snap', message: e.message ?? '');
@@ -245,9 +245,7 @@ class AuthenticationRepository extends GetxController {
           //   stopLoadingWhenReady: true,
           //   phoneNumber: phoneNumber,
           // );
-          await screenRedirect(
-            _auth.currentUser,
-          );
+          await screenRedirect(_auth.currentUser);
         },
         codeAutoRetrievalTimeout: (verificationId) {
           // phoneNoVerificationId.value = verificationId;
@@ -292,29 +290,29 @@ class AuthenticationRepository extends GetxController {
   }
 
   ///[FacebookAuthentication] - FACEBOOK
-  Future<UserCredential> signInWithFacebook() async {
-    try {
-      // Trigger the sign-in flow
-      final LoginResult loginResult = await FacebookAuth.instance.login(permissions: ['email']);
-
-      // Create a credential from the access token
-      final AccessToken accessToken = loginResult.accessToken!;
-      final OAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(accessToken.tokenString);
-
-      // Once signed in, return the UserCredential
-      return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
-    } on FirebaseAuthException catch (e) {
-      throw TFirebaseAuthException(e.code).message;
-    } on FirebaseException catch (e) {
-      throw TFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const TFormatException();
-    } on PlatformException catch (e) {
-      throw TPlatformException(e.code).message;
-    } catch (e) {
-      throw 'Something went wrong. Please try again';
-    }
-  }
+  // Future<UserCredential> signInWithFacebook() async {
+  //   try {
+  //     // Trigger the sign-in flow
+  //     final LoginResult loginResult = await FacebookAuth.instance.login(permissions: ['email']);
+  //
+  //     // Create a credential from the access token
+  //     final AccessToken accessToken = loginResult.accessToken!;
+  //     final OAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(accessToken.tokenString);
+  //
+  //     // Once signed in, return the UserCredential
+  //     return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+  //   } on FirebaseAuthException catch (e) {
+  //     throw TFirebaseAuthException(e.code).message;
+  //   } on FirebaseException catch (e) {
+  //     throw TFirebaseException(e.code).message;
+  //   } on FormatException catch (_) {
+  //     throw const TFormatException();
+  //   } on PlatformException catch (e) {
+  //     throw TPlatformException(e.code).message;
+  //   } catch (e) {
+  //     throw 'Something went wrong. Please try again';
+  //   }
+  // }
 
   /* ---------------------------- ./end Federated identity & social sign-in ---------------------------------*/
 

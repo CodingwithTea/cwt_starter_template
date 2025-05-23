@@ -41,7 +41,6 @@ dependencies:
   iconsax: ^0.0.8
   cupertino_icons: ^1.0.8
   line_awesome_flutter: ^3.0.1
-  flutter_native_splash: ^2.4.6
 
   ## -- Utility PACKAGES
   intl: ^0.20.2
@@ -52,6 +51,7 @@ dependencies:
   carousel_slider: ^5.0.0
   connectivity_plus: ^6.1.1
   country_code_picker: ^3.3.0
+  flutter_native_splash: ^2.4.6
 
   # Notification
   flutter_local_notifications: ^19.2.1

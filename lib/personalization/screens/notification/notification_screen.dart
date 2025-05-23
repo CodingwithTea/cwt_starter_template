@@ -9,7 +9,7 @@ import '../../../../utils/constants/sizes.dart';
 import '../../../../utils/helpers/helper_functions.dart';
 import '../../../common/widgets/custom_shapes/containers/rounded_container.dart';
 import '../../../data/repository/authentication_repository/authentication_repository.dart';
-import '../../controllers/notifcation_controller.dart';
+import '../../controllers/notification_controller.dart';
 
 class NotificationScreen extends StatelessWidget {
   const NotificationScreen({super.key});
