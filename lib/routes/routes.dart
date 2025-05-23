@@ -11,4 +11,8 @@ class TRoutes {
   static const otpVerification = '/otp-verification';
   static const reAuthenticateOtpVerification = '/re-authenticate-otp-verification';
   static const profileScreen = '/profile-screen';
+  //Notification
+  static const notification = '/notification';
+  static const notificationDetails = '/notification-details';
+
 }
