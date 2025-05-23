@@ -1,13 +1,13 @@
 import 'package:get/get.dart';
 
 import '../data/repository/authentication_repository/authentication_repository.dart';
-import '../data/repository/user_repository/user_repository.dart';
 import '../data/services/notifications/notification_service.dart';
 import '../features/authentication/controllers/login_controller.dart';
 import '../features/authentication/controllers/on_boarding_controller.dart';
 import '../features/authentication/controllers/otp_controller.dart';
 import '../features/authentication/controllers/signup_controller.dart';
 import '../personalization/controllers/notifcation_controller.dart';
+import '../personalization/controllers/user_controller.dart';
 import '../utils/helpers/network_manager.dart';
 
 class GeneralBindings extends Bindings {

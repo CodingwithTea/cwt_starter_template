@@ -48,13 +48,14 @@ class NotificationDetailScreen extends StatelessWidget {
                   TRoundedContainer(
                     padding: const EdgeInsets.symmetric(vertical: TSizes.sm, horizontal: TSizes.sm),
                     backgroundColor: TColors.primary,
-                    child: Text(controller.selectedNotification.value.type,
-                        style: Theme.of(context).textTheme.labelMedium!.apply(color: Colors.black)),
+                    child: Text(controller.selectedNotification.value.type, style: Theme.of(context).textTheme.labelMedium!.apply(color: Colors.black)),
                   ),
                 const SizedBox(height: TSizes.spaceBtwItems),
                 Text('Title', style: Theme.of(context).textTheme.labelMedium),
-                Text(controller.selectedNotification.value.title,
-                    style: Theme.of(context).textTheme.titleMedium!.apply(color: dark ? Colors.white : Colors.blue)),
+                Text(
+                  controller.selectedNotification.value.title,
+                  style: Theme.of(context).textTheme.titleMedium!.apply(color: dark ? Colors.white : Colors.blue),
+                ),
                 const SizedBox(height: TSizes.spaceBtwItems),
                 Text('Message', style: Theme.of(context).textTheme.labelMedium),
                 Text(controller.selectedNotification.value.body, style: Theme.of(context).textTheme.bodyMedium),
@@ -67,10 +68,8 @@ class NotificationDetailScreen extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton.icon(
-                      onPressed: () => Get.toNamed(
-                        controller.selectedNotification.value.route,
-                        parameters: {'id': controller.selectedNotification.value.routeId},
-                      ),
+                      onPressed:
+                          () => Get.toNamed(controller.selectedNotification.value.route, parameters: {'id': controller.selectedNotification.value.routeId}),
                       label: const Text('Redirect'),
                       icon: const Icon(Iconsax.arrow_right),
                     ),

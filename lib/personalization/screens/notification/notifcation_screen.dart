@@ -36,8 +36,8 @@ class NotificationScreen extends StatelessWidget {
               return TRoundedContainer(
                 padding: const EdgeInsets.symmetric(vertical: TSizes.sm),
                 backgroundColor: notification.seenBy[AuthenticationRepository.instance.getUserID] == true
-                    ? Colors.grey.withOpacity(0.15)
-                    : Colors.blue.withOpacity(0.15),
+                    ? Colors.grey.withValues(alpha: 0.15)
+                    : Colors.blue.withValues(alpha: 0.15),
                 child: Obx(
                   () => ListTile(
                     leading: Icon(Iconsax.notification_bing,
