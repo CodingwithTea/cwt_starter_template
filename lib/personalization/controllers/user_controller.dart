@@ -2,6 +2,7 @@ import 'package:cwt_starter_template/utils/popups/exports.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../common/widgets/loaders/circular_loader.dart';
 import '../../data/repository/authentication_repository/authentication_repository.dart';
@@ -33,6 +34,8 @@ class UserController extends GetxController {
   final email = TextEditingController();
   final phoneNo = TextEditingController();
   final fullName = TextEditingController();
+  final imageUploading = false.obs;
+  final profileImageUrl = ''.obs;
   GlobalKey<FormState> updateUserProfileFormKey = GlobalKey<FormState>();
 
   /// init user data when Home Screen appears
@@ -128,6 +131,7 @@ class UserController extends GetxController {
       // Update the Rx User value
       user.value.fullName = fullName.text.trim();
       user.value.email = email.text.trim();
+      user.value.phoneNumber = phoneNo.text.trim();
 
       // Remove Loader
       TFullScreenLoader.stopLoading();
@@ -140,6 +144,28 @@ class UserController extends GetxController {
     } catch (e) {
       TFullScreenLoader.stopLoading();
       TLoaders.errorSnackBar(title: 'Oh Snap!', message: e.toString());
+    }
+  }
+
+  /// Upload Profile Picture
+  uploadUserProfilePicture() async {
+    try {
+      final image = await ImagePicker().pickImage(source: ImageSource.gallery, imageQuality: 70, maxHeight: 512, maxWidth: 512);
+      if (image != null) {
+        imageUploading.value = true;
+        final uploadedImage = await userRepository.uploadImage('Users/Images/Profile/', image);
+        profileImageUrl.value = uploadedImage;
+        Map<String, dynamic> newImage = {'profilePicture': uploadedImage};
+        await userRepository.updateSingleField(newImage);
+        user.value.profilePicture = uploadedImage;
+        user.refresh();
+
+        imageUploading.value = false;
+        TLoaders.successSnackBar(title: 'Congratulations', message: 'Your Profile Image has been updated!');
+      }
+    } catch (e) {
+      imageUploading.value = false;
+      TLoaders.errorSnackBar(title: 'OhSnap', message: 'Something went wrong: $e');
     }
   }
 

@@ -1,15 +1,12 @@
 import 'package:cwt_starter_template/common/widgets/appbar/home_appbar.dart';
 import 'package:cwt_starter_template/features/checkout/screens/widgets/billing_address_section.dart';
 import 'package:cwt_starter_template/features/checkout/screens/widgets/billing_payment_section.dart';
-import 'package:cwt_starter_template/features/dashboard/course/screens/dashboard/coursesDashboard.dart';
 import 'package:cwt_starter_template/personalization/controllers/address_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../common/widgets/custom_shapes/containers/rounded_container.dart';
-import '../../../../common/widgets/success_screen/success_screen.dart';
 import '../../../../utils/constants/colors.dart';
-import '../../../../utils/constants/image_strings.dart';
 import '../../../../utils/constants/sizes.dart';
 import '../../../../utils/helpers/helper_functions.dart';
 import '../../../../utils/helpers/pricing_calculator.dart';
@@ -83,18 +80,7 @@ class CheckoutScreen extends StatelessWidget {
         padding: const EdgeInsets.all(TSizes.defaultSpace),
         child: SizedBox(
           width: double.infinity,
-          child: ElevatedButton(
-            onPressed:
-                () => Get.to(
-                  () => SuccessScreen(
-                    image: TImages.successfulPaymentIcon,
-                    title: 'Payment Success!',
-                    subTitle: 'Your item will be shipped soon!',
-                    onPressed: () => Get.offAll(() => const CoursesDashboard()),
-                  ),
-                ),
-            child: Text('Checkout \$${TPricingCalculator.calculateTotalPrice(subTotal, 'US')}'),
-          ),
+          child: ElevatedButton(onPressed: () {}, child: Text('Checkout \$${TPricingCalculator.calculateTotalPrice(subTotal, 'US')}')),
         ),
       ),
     );

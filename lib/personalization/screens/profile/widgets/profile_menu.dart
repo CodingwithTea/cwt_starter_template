@@ -3,6 +3,7 @@ import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 import '../../../../../../utils/constants/colors.dart';
 import '../../../../../../utils/constants/sizes.dart';
+import '../../../../utils/helpers/helper_functions.dart';
 
 class ProfileMenuWidget extends StatelessWidget {
   const ProfileMenuWidget({super.key, required this.title, required this.icon, required this.onPress, this.endIcon = true, this.textColor});
@@ -15,7 +16,7 @@ class ProfileMenuWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
+    var isDark = THelperFunctions.isDarkMode(context);
     var iconColor = isDark ? TColors.primary : TColors.accent;
 
     return ListTile(

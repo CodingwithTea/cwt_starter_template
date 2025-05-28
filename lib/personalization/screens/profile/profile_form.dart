@@ -22,13 +22,13 @@ class ProfileFormScreen extends StatelessWidget {
           ),
           const SizedBox(height: TSizes.xl - 20),
           TextFormField(
-            enabled: false,
+            enabled: controller.email.text.isEmpty ? true : false,
             controller: controller.email,
             decoration: const InputDecoration(label: Text(TTexts.tEmail), prefixIcon: Icon(LineAwesomeIcons.envelope)),
           ),
           const SizedBox(height: TSizes.xl - 20),
           TextFormField(
-            enabled: false,
+            enabled: controller.phoneNo.text.isEmpty ? true : false,
             controller: controller.phoneNo,
             decoration: const InputDecoration(label: Text(TTexts.tPhoneNo), prefixIcon: Icon(LineAwesomeIcons.phone_solid)),
           ),
@@ -46,7 +46,12 @@ class ProfileFormScreen extends StatelessWidget {
                 TextSpan(
                   text: TTexts.tJoined,
                   style: TextStyle(fontSize: 12),
-                  children: [TextSpan(text: THelperFunctions.getFormattedDate(controller.user.value.createdAt!) , style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12))],
+                  children: [
+                    TextSpan(
+                      text: THelperFunctions.getFormattedDate(controller.user.value.createdAt!),
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                    ),
+                  ],
                 ),
               ),
               ElevatedButton(

@@ -4,15 +4,16 @@ import '../../../../../../utils/constants/colors.dart';
 import '../../../../../../utils/constants/image_strings.dart';
 import '../../../../../../utils/constants/sizes.dart';
 import '../../../../../../utils/constants/text_strings.dart';
+import '../../../../../../utils/helpers/helper_functions.dart';
 
 class DashboardBanners extends StatelessWidget {
-  const DashboardBanners({super.key, required this.txtTheme, required this.isDark});
+  const DashboardBanners({super.key, required this.txtTheme});
 
   final TextTheme txtTheme;
-  final bool isDark;
 
   @override
   Widget build(BuildContext context) {
+    final dark = THelperFunctions.isDarkMode(context);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -22,7 +23,7 @@ class DashboardBanners extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               //For Dark Color
-              color: isDark ? TColors.secondary : TColors.cardBackgroundColor,
+              color: dark ? TColors.secondary : TColors.cardBackgroundColor,
             ),
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
             child: Column(
@@ -31,7 +32,10 @@ class DashboardBanners extends StatelessWidget {
                 const Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [Flexible(child: Image(image: AssetImage(TImages.tBookmarkIcon))), Flexible(child: Image(image: AssetImage(TImages.tBannerImage1)))],
+                  children: [
+                    Flexible(child: Image(image: AssetImage(TImages.tBookmarkIcon))),
+                    Flexible(child: Image(image: AssetImage(TImages.tBannerImage1))),
+                  ],
                 ),
                 const SizedBox(height: 25),
                 Text(TTexts.tDashboardBannerTitle1, style: txtTheme.headlineMedium, maxLines: 2, overflow: TextOverflow.ellipsis),
@@ -50,7 +54,7 @@ class DashboardBanners extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   //For Dark Color
-                  color: isDark ? TColors.secondary : TColors.cardBackgroundColor,
+                  color: dark ? TColors.secondary : TColors.cardBackgroundColor,
                 ),
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
                 child: Column(
@@ -59,7 +63,10 @@ class DashboardBanners extends StatelessWidget {
                     const Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [Flexible(child: Image(image: AssetImage(TImages.tBookmarkIcon))), Flexible(child: Image(image: AssetImage(TImages.tBannerImage2)))],
+                      children: [
+                        Flexible(child: Image(image: AssetImage(TImages.tBookmarkIcon))),
+                        Flexible(child: Image(image: AssetImage(TImages.tBannerImage2))),
+                      ],
                     ),
                     Text(TTexts.tDashboardBannerTitle2, style: txtTheme.headlineMedium, overflow: TextOverflow.ellipsis),
                     Text(TTexts.tDashboardBannerSubTitle, style: txtTheme.bodyMedium, overflow: TextOverflow.ellipsis),

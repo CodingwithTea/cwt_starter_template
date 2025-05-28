@@ -5,6 +5,7 @@ import '../../../../../../utils/constants/colors.dart';
 import '../../../../../../utils/constants/image_strings.dart';
 import '../../../../../../utils/constants/sizes.dart';
 import '../../../../../../utils/constants/text_strings.dart';
+import '../../../../../utils/helpers/helper_functions.dart';
 
 class ForgetPasswordPhoneScreen extends StatelessWidget {
   const ForgetPasswordPhoneScreen({super.key});
@@ -12,8 +13,7 @@ class ForgetPasswordPhoneScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //Just In-case if you want to replace the Image Color for Dark Theme
-    final brightness = MediaQuery.of(context).platformBrightness;
-    final bool isDark = brightness == Brightness.dark;
+    final dark = THelperFunctions.isDarkMode(context);
 
     return SafeArea(
       child: Scaffold(
@@ -24,7 +24,7 @@ class ForgetPasswordPhoneScreen extends StatelessWidget {
               children: [
                 const SizedBox(height: TSizes.defaultSpace * 4),
                 FormHeaderWidget(
-                  imageColor: isDark ? TColors.primary : TColors.secondary,
+                  imageColor: dark ? TColors.primary : TColors.secondary,
                   image: TImages.tForgetPasswordImage,
                   title: TTexts.tForgetPassword,
                   subTitle: TTexts.tForgetPasswordSubTitle,

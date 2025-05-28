@@ -3,8 +3,10 @@ import 'package:get/get.dart';
 
 import '../../../personalization/controllers/user_controller.dart';
 import '../../../routes/routes.dart';
+import '../../../utils/constants/colors.dart';
 import '../../../utils/constants/image_strings.dart';
 import '../../../utils/helpers/helper_functions.dart';
+import '../images/t_circular_image.dart';
 
 /// A reusable custom drawer widget with predefined settings for account details,
 /// menu items, and a "Become a driver" section. The drawer's content is set
@@ -21,20 +23,34 @@ class TDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     final dark = THelperFunctions.isDarkMode(context);
     final userController = UserController.instance;
+    final networkImage = userController.user.value.profilePicture;
+    final image = networkImage.isNotEmpty ? networkImage : TImages.tProfileImage;
     return Drawer(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Custom Drawer header showing account information centered in a row
-          GestureDetector(
-            child: UserAccountsDrawerHeader(
-              currentAccountPicture: Image(image: AssetImage(TImages.tLogoImage)),
-              currentAccountPictureSize: Size(100, 100),
-              accountName: Text(userController.user.value.fullName),
-              accountEmail: Text(userController.user.value.email),
-            ),
+          InkWell(
             onTap: () => Get.toNamed(TRoutes.profileScreen),
+            child: Container(
+              color: TColors.primary,
+              padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Profile image
+                  TCircularImage(padding: 0, backgroundColor: dark ? TColors.primary : TColors.white, image: image, width: 60, height: 60, isNetworkImage: networkImage.isNotEmpty),
+                  const SizedBox(height: 16),
+                  // Name
+                  Text(userController.user.value.fullName, style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold,color: TColors.dark)),
+                  // Email
+                  Text(userController.user.value.email, style: Theme.of(context).textTheme.bodyMedium!.apply(color: TColors.dark)),
+                ],
+              ),
+            ),
           ),
+
+          const SizedBox(height: 8),
 
           // Drawer menu items with predefined values
           ..._drawerItems(),
@@ -51,9 +67,9 @@ class TDrawer extends StatelessWidget {
   List<Widget> _drawerItems() {
     return [
       _buildDrawerItem(icon: Icons.verified_user, title: "Profile", onTap: () => Get.toNamed(TRoutes.profileScreen)),
-      _buildDrawerItem(icon: Icons.home, title: "E-Commerce Dashboard", onTap: ()  => Get.toNamed(TRoutes.eComDashboard)),
-      _buildDrawerItem(icon: Icons.add_shopping_cart, title: "Cart", onTap: ()  => Get.toNamed(TRoutes.cartScreen)),
-      _buildDrawerItem(icon: Icons.shopping_bag, title: "Checkout", onTap: ()  => Get.toNamed(TRoutes.checkoutScreen)),
+      _buildDrawerItem(icon: Icons.home, title: "E-Commerce Dashboard", onTap: () => Get.toNamed(TRoutes.eComDashboard)),
+      _buildDrawerItem(icon: Icons.add_shopping_cart, title: "Cart", onTap: () => Get.toNamed(TRoutes.cartScreen)),
+      _buildDrawerItem(icon: Icons.shopping_bag, title: "Checkout", onTap: () => Get.toNamed(TRoutes.checkoutScreen)),
       _buildDrawerItem(icon: Icons.favorite, title: "Wishlist", onTap: () => Get.toNamed(TRoutes.favouritesScreen)),
     ];
   }

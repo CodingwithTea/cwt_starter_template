@@ -2,17 +2,18 @@ import 'package:flutter/material.dart';
 
 import '../../../../../../utils/constants/colors.dart';
 import '../../../../../../utils/constants/sizes.dart';
+import '../../../../../../utils/helpers/helper_functions.dart';
 import '../../../models/dashboard/courses_model.dart';
 
 class DashboardTopCourses extends StatelessWidget {
-  const DashboardTopCourses({super.key, required this.txtTheme, required this.isDark});
+  const DashboardTopCourses({super.key, required this.txtTheme});
 
   final TextTheme txtTheme;
-  final bool isDark;
 
   @override
   Widget build(BuildContext context) {
     final list = DashboardTopCoursesModel.list;
+    final dark = THelperFunctions.isDarkMode(context);
     return SizedBox(
       height: 210,
       child: ListView.builder(
@@ -31,7 +32,7 @@ class DashboardTopCourses extends StatelessWidget {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       //For Dark Color
-                      color: isDark ? TColors.secondary : TColors.cardBackgroundColor,
+                      color: dark ? TColors.secondary : TColors.cardBackgroundColor,
                     ),
                     padding: const EdgeInsets.all(10),
                     child: Column(

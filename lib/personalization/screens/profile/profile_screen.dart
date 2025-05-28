@@ -1,3 +1,4 @@
+import 'package:cwt_starter_template/personalization/controllers/theme_controller.dart';
 import 'package:cwt_starter_template/personalization/controllers/user_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,8 +8,12 @@ import '../../../../../common/widgets/buttons/primary_button.dart';
 import '../../../../../data/repository/authentication_repository/authentication_repository.dart';
 import '../../../../../utils/constants/sizes.dart';
 import '../../../../../utils/constants/text_strings.dart';
+import '../../../common/widgets/images/t_circular_image.dart';
+import '../../../common/widgets/shimmers/shimmer.dart';
+import '../../../routes/routes.dart';
+import '../../../utils/constants/colors.dart';
+import '../../../utils/constants/image_strings.dart';
 import 'update_profile_screen.dart';
-import 'widgets/image_with_icon.dart';
 import 'widgets/profile_menu.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -16,12 +21,21 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
+    // final dark = THelperFunctions.isDarkMode(context);
+    final themeController = ThemeController.instance;
+    final userController = UserController.instance;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(onPressed: () => Get.back(), icon: const Icon(LineAwesomeIcons.angle_left_solid)),
         title: Text(TTexts.tProfile, style: Theme.of(context).textTheme.headlineMedium),
-        actions: [IconButton(onPressed: () {}, icon: Icon(isDark ? LineAwesomeIcons.sun : LineAwesomeIcons.moon))],
+        actions: [
+          Obx(
+            () => IconButton(
+              icon: Icon(themeController.isDark.value ? LineAwesomeIcons.sun : LineAwesomeIcons.moon),
+              onPressed: () => themeController.toggleTheme(),
+            ),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -29,10 +43,40 @@ class ProfileScreen extends StatelessWidget {
           child: Column(
             children: [
               /// -- IMAGE with ICON
-              const ImageWithIcon(),
+              // const ImageWithIcon(),
+              Stack(
+                children: [
+                  Obx(() {
+                    final networkImage = userController.user.value.profilePicture;
+                    final image = networkImage.isNotEmpty ? networkImage : TImages.tProfileImage;
+                    return userController.imageUploading.value
+                        ? const TShimmerEffect(width: 80, height: 80, radius: 100)
+                        : TCircularImage(padding: 0,image: image, width: 80, height: 80, isNetworkImage: networkImage.isNotEmpty);
+                  }),
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: GestureDetector(
+                      onTap: userController.imageUploading.value ? () {} : () => userController.uploadUserProfilePicture(),
+                      child: Container(
+                        width: 25,
+                        height: 25,
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: TColors.primary),
+                        child: Icon(LineAwesomeIcons.pencil_alt_solid, color: Colors.black, size: 18),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(height: 10),
-              Text(UserController.instance.user.value.fullName.isEmpty ? TTexts.tProfileHeading: UserController.instance.user.value.fullName, style: Theme.of(context).textTheme.headlineMedium),
-              Text(UserController.instance.user.value.email.isEmpty ? TTexts.tProfileSubHeading : UserController.instance.user.value.email, style: Theme.of(context).textTheme.bodyMedium),
+              Text(
+                UserController.instance.user.value.fullName.isEmpty ? TTexts.tProfileHeading : UserController.instance.user.value.fullName,
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
+              Text(
+                UserController.instance.user.value.email.isEmpty ? TTexts.tProfileSubHeading : UserController.instance.user.value.email,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
               const SizedBox(height: 20),
 
               /// -- BUTTON
@@ -42,12 +86,12 @@ class ProfileScreen extends StatelessWidget {
               const SizedBox(height: 10),
 
               /// -- MENU
-              ProfileMenuWidget(title: "Settings", icon: LineAwesomeIcons.cog_solid, onPress: () {}),
-              ProfileMenuWidget(title: "Billing Details", icon: LineAwesomeIcons.wallet_solid, onPress: () {}),
-              // ProfileMenuWidget(title: "User Management", icon: LineAwesomeIcons.user_check_solid, onPress: () => Get.to(() => AllUsers())),
+              ProfileMenuWidget(title: "E-Commerce Dashboard", icon: Icons.home, onPress: () => Get.toNamed(TRoutes.eComDashboard)),
+              ProfileMenuWidget(title: "Cart", icon: Icons.add_shopping_cart, onPress: () => Get.toNamed(TRoutes.cartScreen)),
+              ProfileMenuWidget(title: "Checkout", icon: Icons.shopping_bag, onPress: () => Get.toNamed(TRoutes.checkoutScreen)),
+              ProfileMenuWidget(title: "Wishlist", icon: Icons.favorite, onPress: () => Get.toNamed(TRoutes.favouritesScreen)),
               const Divider(),
               const SizedBox(height: 10),
-              ProfileMenuWidget(title: "Information", icon: LineAwesomeIcons.info_solid, onPress: () {}),
               ProfileMenuWidget(
                 title: "Logout",
                 icon: LineAwesomeIcons.sign_out_alt_solid,

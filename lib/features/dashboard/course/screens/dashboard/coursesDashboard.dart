@@ -17,12 +17,11 @@ class CoursesDashboard extends StatelessWidget {
   Widget build(BuildContext context) {
     //Variables
     final txtTheme = Theme.of(context).textTheme;
-    final isDark = MediaQuery.of(context).platformBrightness == Brightness.dark; //Dark mode
 
 
     return SafeArea(
       child: Scaffold(
-        appBar: DashboardAppBar(isDark: isDark),
+        appBar: DashboardAppBar(),
 
         /// Create a new Header
         drawer: TDrawer(),
@@ -46,12 +45,12 @@ class CoursesDashboard extends StatelessWidget {
                 const SizedBox(height: TSizes.lg),
 
                 //Banners
-                DashboardBanners(txtTheme: txtTheme, isDark: isDark),
+                DashboardBanners(txtTheme: txtTheme),
                 const SizedBox(height: TSizes.lg),
 
                 //Top Course
                 Text(TTexts.tDashboardTopCourses, style: txtTheme.headlineMedium?.apply(fontSizeFactor: 1.2)),
-                DashboardTopCourses(txtTheme: txtTheme, isDark: isDark),
+                DashboardTopCourses(txtTheme: txtTheme),
               ],
             ),
           ),
