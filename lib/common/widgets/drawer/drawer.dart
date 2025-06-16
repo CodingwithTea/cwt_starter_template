@@ -6,7 +6,7 @@ import '../../../routes/routes.dart';
 import '../../../utils/constants/colors.dart';
 import '../../../utils/constants/image_strings.dart';
 import '../../../utils/helpers/helper_functions.dart';
-import '../images/t_circular_image.dart';
+import '../images/t_rounded_image.dart';
 
 /// A reusable custom drawer widget with predefined settings for account details,
 /// menu items, and a "Become a driver" section. The drawer's content is set
@@ -39,10 +39,13 @@ class TDrawer extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   // Profile image
-                  TCircularImage(padding: 0, backgroundColor: dark ? TColors.primary : TColors.white, image: image, width: 60, height: 60, isNetworkImage: networkImage.isNotEmpty),
+                  TRoundedImage(width: 60, height: 60, isNetworkImage: networkImage.isNotEmpty, fit: BoxFit.fill, imageUrl: image, borderRadius: 50),
                   const SizedBox(height: 16),
                   // Name
-                  Text(userController.user.value.fullName, style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold,color: TColors.dark)),
+                  Text(
+                    userController.user.value.fullName,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold, color: TColors.dark),
+                  ),
                   // Email
                   Text(userController.user.value.email, style: Theme.of(context).textTheme.bodyMedium!.apply(color: TColors.dark)),
                 ],

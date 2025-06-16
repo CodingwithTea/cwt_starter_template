@@ -1,3 +1,4 @@
+import 'package:cwt_starter_template/common/widgets/images/t_rounded_image.dart';
 import 'package:cwt_starter_template/personalization/controllers/theme_controller.dart';
 import 'package:cwt_starter_template/personalization/controllers/user_controller.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,6 @@ import '../../../../../common/widgets/buttons/primary_button.dart';
 import '../../../../../data/repository/authentication_repository/authentication_repository.dart';
 import '../../../../../utils/constants/sizes.dart';
 import '../../../../../utils/constants/text_strings.dart';
-import '../../../common/widgets/images/t_circular_image.dart';
 import '../../../common/widgets/shimmers/shimmer.dart';
 import '../../../routes/routes.dart';
 import '../../../utils/constants/colors.dart';
@@ -51,7 +51,7 @@ class ProfileScreen extends StatelessWidget {
                     final image = networkImage.isNotEmpty ? networkImage : TImages.tProfileImage;
                     return userController.imageUploading.value
                         ? const TShimmerEffect(width: 80, height: 80, radius: 100)
-                        : TCircularImage(padding: 0,image: image, width: 80, height: 80, isNetworkImage: networkImage.isNotEmpty);
+                        : TRoundedImage(width: 80, height: 80, isNetworkImage: networkImage.isNotEmpty,fit: BoxFit.fill, imageUrl: image,borderRadius: 50,);
                   }),
                   Positioned(
                     bottom: 0,

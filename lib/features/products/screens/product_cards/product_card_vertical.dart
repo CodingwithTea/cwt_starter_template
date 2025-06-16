@@ -17,6 +17,7 @@ import '../../controllers/product_controller.dart';
 import '../../models/product_model.dart';
 import '../../models/product_variation_model.dart';
 import '../favourite_icon.dart';
+import '../product_detail/product_detail.dart';
 
 class TProductCardVertical extends StatelessWidget {
   const TProductCardVertical({super.key, required this.product});
@@ -29,7 +30,7 @@ class TProductCardVertical extends StatelessWidget {
     final salePercentage = ProductController.instance.calculateSalePercentage(product.price, product.salePrice);
     final dark = THelperFunctions.isDarkMode(context);
     return GestureDetector(
-      // onTap: () => Get.to(() => ProductDetailScreen(product: product)),
+      onTap: () => Get.to(() => ProductDetailScreen(product: product)),
 
       /// Container with side paddings, color, edges, radius and shadow.
       child: Container(
@@ -129,7 +130,7 @@ class TProductCardVertical extends StatelessWidget {
                     if (product.productVariations == null) {
                       cartController.addSingleItemToCart(product, ProductVariationModel.empty());
                     } else {
-                      // Get.to(() => ProductDetailScreen(product: product));
+                      Get.to(() => ProductDetailScreen(product: product));
                     }
                   },
                   child: Obx(

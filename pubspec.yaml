@@ -48,6 +48,7 @@ dependencies:
   lottie: ^3.3.1
   badges: ^3.1.2
   shimmer: ^3.0.0
+  readmore: ^3.0.0
   image_picker: ^1.1.2
   url_launcher: ^6.3.1
   carousel_slider: ^5.0.0
@@ -74,6 +75,7 @@ flutter:
   assets:
     - assets/logo/
     - assets/images/
+    - assets/icons/brands/
     - assets/images/profile/
     - assets/images/dashboard/
     - assets/images/splash_images/
