@@ -20,13 +20,14 @@ class GeneralBindings extends Bindings {
   void dependencies() {
     /// -- Core
     Get.put(NetworkManager());
+
     /// -- Repository
     Get.lazyPut(() => AuthenticationRepository(), fenix: true);
-    Get.lazyPut(() => UserController());
     Get.put(CartController());
     Get.put(ThemeController());
-    Get.lazyPut(() => CheckoutController());
     Get.put(ProductController());
+    Get.lazyPut(() => UserController());
+    Get.lazyPut(() => CheckoutController());
     Get.lazyPut(() => AddressController());
 
     Get.lazyPut(() => OnBoardingController(), fenix: true);
@@ -36,6 +37,5 @@ class GeneralBindings extends Bindings {
     Get.lazyPut(() => OTPController(), fenix: true);
     Get.put(TNotificationService());
     Get.lazyPut(() => NotificationController(), fenix: true);
-
   }
 }

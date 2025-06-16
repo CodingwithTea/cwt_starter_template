@@ -10,7 +10,7 @@ import '../../data/repository/authentication_repository/authentication_repositor
 import '../../data/repository/notifications/notification_repository.dart';
 
 class NotificationController extends GetxController {
-  static NotificationController instance = Get.find();
+  static NotificationController get instance => Get.isRegistered() ? Get.find() : Get.put(NotificationController());
 
   final isLoading = false.obs;
   final selectedNotification = NotificationModel.empty().obs;

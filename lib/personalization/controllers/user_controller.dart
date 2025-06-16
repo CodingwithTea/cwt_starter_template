@@ -47,12 +47,24 @@ class UserController extends GetxController {
 
 
   /// Fetch user record
-  Future<void> fetchUserRecord() async {
+  Future<void> fetchUserRecord({bool fetchLatestRecord = false}) async {
     try {
-      if (user.value.id.isEmpty) {
+      if (fetchLatestRecord) {
         profileLoading.value = true;
         final user = await userRepository.fetchUserDetails();
         this.user(user);
+      } else {
+        // Check if user is logged in and has a valid ID
+        if (user.value.id != AuthenticationRepository.instance.getUserID) {
+          user.value = UserModel.empty();
+        }
+
+        // Fetch user data from the repository
+        if (user.value.id.isEmpty) {
+          profileLoading.value = true;
+          final user = await userRepository.fetchUserDetails();
+          this.user(user);
+        }
       }
     } catch (e) {
       TLoaders.warningSnackBar(title: 'Warning', message: 'Unable to fetch your information. Try again.');
@@ -60,6 +72,7 @@ class UserController extends GetxController {
       profileLoading.value = false;
     }
   }
+
   /// Save user Record from any Registration provider
   Future<void> saveUserRecord({UserModel? user, UserCredential? userCredentials}) async {
     try {

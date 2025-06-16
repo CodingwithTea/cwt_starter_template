@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../../../data/repository/authentication_repository/authentication_repository.dart';
 import '../../../data/services/notifications/notification_service.dart';
+import '../../../personalization/controllers/create_notification_controller.dart';
 import '../../../personalization/controllers/user_controller.dart';
 import '../../../personalization/models/user_model.dart';
 import '../../../utils/constants/enums.dart';
@@ -76,6 +77,9 @@ class SignUpController extends GetxController {
 
       final userController = Get.put(UserController());
       await userController.saveUserRecord(user: newUser);
+
+      Get.put(CreateNotificationController());
+      await CreateNotificationController.instance.createNotification();
 
       // Remove Loader
       TFullScreenLoader.stopLoading();

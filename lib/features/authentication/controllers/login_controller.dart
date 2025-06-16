@@ -1,3 +1,4 @@
+import 'package:cwt_starter_template/personalization/controllers/create_notification_controller.dart';
 import 'package:cwt_starter_template/utils/popups/exports.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -91,6 +92,9 @@ class LoginController extends GetxController {
       // Save Authenticated user data in the Firebase Firestore
       await userController.saveUserRecord(userCredentials: userCredentials);
 
+      Get.put(CreateNotificationController());
+      await CreateNotificationController.instance.createNotification();
+
       // Remove Loader
       TFullScreenLoader.stopLoading();
 
@@ -101,35 +105,4 @@ class LoginController extends GetxController {
       TLoaders.errorSnackBar(title: 'Oh Snap', message: e.toString());
     }
   }
-
-  /// [FacebookSignInAuthentication]
-  // Future<void> facebookSignIn() async {
-  //   try {
-  //     // Start Loading
-  //     TFullScreenLoader.openLoadingDialog('Logging you in...', TImages.docerAnimation);
-  //
-  //     // Check Internet Connectivity
-  //     final isConnected = await NetworkManager.instance.isConnected();
-  //     if (!isConnected) {
-  //       TFullScreenLoader.stopLoading();
-  //       return;
-  //     }
-  //
-  //     // Facebook Authentication
-  //     final userCredentials = await AuthenticationRepository.instance.signInWithFacebook();
-  //
-  //     final userController = Get.put(UserController());
-  //     // Save Authenticated user data in the Firebase Firestore
-  //     await userController.saveUserRecord(userCredentials: userCredentials);
-  //
-  //     // Remove Loader
-  //     TFullScreenLoader.stopLoading();
-  //
-  //     // Redirect
-  //     await AuthenticationRepository.instance.screenRedirect(userCredentials.user);
-  //   } catch (e) {
-  //     TFullScreenLoader.stopLoading();
-  //     TLoaders.errorSnackBar(title: 'Oh Snap', message: e.toString());
-  //   }
-  // }
 }

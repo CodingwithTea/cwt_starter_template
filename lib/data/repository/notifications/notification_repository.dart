@@ -6,8 +6,7 @@ import '../../services/notifications/notification_model.dart';
 import '../authentication_repository/authentication_repository.dart';
 
 class NotificationRepository extends TBaseRepositoryController<NotificationModel> {
-  // Singleton instance of the NotificationRepository
-  static NotificationRepository get instance => Get.find();
+  static NotificationRepository get instance => Get.isRegistered() ? Get.find() : Get.put(NotificationRepository());
 
   @override
   Future<String> addItem(NotificationModel item) async {
