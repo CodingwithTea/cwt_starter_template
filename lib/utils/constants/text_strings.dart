@@ -104,7 +104,7 @@ class TTexts {
   static const String tOtpMessage = "Enter the verification code sent on your Phone Number ";
 
   // -- Phone Number Authentication - Text
-  static const String phoneNo = '07-71234-567';
+  static const String phoneNo = '745-628-5429';
   static const String selectCountry = 'Select Country';
   static const String signupScreenTitle = "signupScreenTitle";
   static const String signupScreenSubTitle = "signupScreenSubTitle";
