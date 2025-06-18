@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:iconsax/iconsax.dart';
 
 import '../../../personalization/controllers/user_controller.dart';
 import '../../../routes/routes.dart';
@@ -21,7 +22,6 @@ class TDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dark = THelperFunctions.isDarkMode(context);
     final userController = UserController.instance;
     final networkImage = userController.user.value.profilePicture;
     final image = networkImage.isNotEmpty ? networkImage : TImages.tProfileImage;
@@ -32,7 +32,7 @@ class TDrawer extends StatelessWidget {
           InkWell(
             onTap: () => Get.toNamed(TRoutes.profileScreen),
             child: Container(
-              color: TColors.primary,
+              color: TColors.textDarkSecondary,
               padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,11 +69,11 @@ class TDrawer extends StatelessWidget {
   /// Each item includes an icon, title, and an optional subtitle.
   List<Widget> _drawerItems() {
     return [
-      _buildDrawerItem(icon: Icons.verified_user, title: "Profile", onTap: () => Get.toNamed(TRoutes.profileScreen)),
-      _buildDrawerItem(icon: Icons.home, title: "E-Commerce Dashboard", onTap: () => Get.toNamed(TRoutes.eComDashboard)),
-      _buildDrawerItem(icon: Icons.add_shopping_cart, title: "Cart", onTap: () => Get.toNamed(TRoutes.cartScreen)),
-      _buildDrawerItem(icon: Icons.shopping_bag, title: "Checkout", onTap: () => Get.toNamed(TRoutes.checkoutScreen)),
-      _buildDrawerItem(icon: Icons.favorite, title: "Wishlist", onTap: () => Get.toNamed(TRoutes.favouritesScreen)),
+      _buildDrawerItem(icon: Iconsax.user, title: "Profile", onTap: () => Get.toNamed(TRoutes.profileScreen)),
+      _buildDrawerItem(icon: Iconsax.home, title: "E-Commerce Dashboard", onTap: () => Get.toNamed(TRoutes.eComDashboard)),
+      _buildDrawerItem(icon: Iconsax.shopping_cart, title: "Cart", onTap: () => Get.toNamed(TRoutes.cartScreen)),
+      _buildDrawerItem(icon: Iconsax.shopping_bag, title: "Checkout", onTap: () => Get.toNamed(TRoutes.checkoutScreen)),
+      _buildDrawerItem(icon: Iconsax.heart, title: "Wishlist", onTap: () => Get.toNamed(TRoutes.favouritesScreen)),
     ];
   }
 
