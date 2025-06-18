@@ -74,10 +74,16 @@ class AuthenticationRepository extends GetxController {
     }
     else {
       deviceStorage.writeIfNull('isFirstTime', true);
-      if (deviceStorage.read('isFirstTime') == true) {
-        Get.offAll(() => const WelcomeScreen());
+      final bool isFirstTime = deviceStorage.read('isFirstTime') as bool;
+
+      if (isFirstTime) {
+        // First launch: go to OnBoarding
+        await Get.offAll(() => const OnBoardingScreen());
+        // After showing onboarding, mark it done:
+        deviceStorage.write('isFirstTime', false);
       } else {
-        Get.offAll(() => const OnBoardingScreen());
+        // Not first launch: go to Welcome or Login
+        Get.offAll(() => const WelcomeScreen());
       }
     }
   }
