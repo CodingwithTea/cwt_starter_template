@@ -10,6 +10,7 @@ class TAppTheme {
   TAppTheme._();
 
   static ThemeData lightTheme = ThemeData(
+    scaffoldBackgroundColor: Colors.white,
     brightness: Brightness.light,
     textTheme: TTextTheme.lightTextTheme,
     appBarTheme: TAppBarTheme.lightAppBarTheme,
