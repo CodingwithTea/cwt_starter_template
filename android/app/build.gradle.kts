@@ -25,7 +25,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.cwt_starter_template"
-        minSdk = 23
+        minSdk = flutter.minSdkVersion.toInt()
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
@@ -42,5 +42,5 @@ flutter {
     source = "../.."
 }
 dependencies {
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
 }
